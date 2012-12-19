@@ -15,3 +15,6 @@ javadoc style, for example:
 public void setPosition(int x, int y){ ... }
 
 Something that simple probably wouldn't need it but for any method that isn't just an accesor right them out.
+
+Also make sure to commit often, you don't have to sync every commit right away but having the extra commits is nice in case
+a roll back is needed.
