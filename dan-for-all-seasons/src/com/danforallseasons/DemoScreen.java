@@ -28,21 +28,20 @@ public class DemoScreen implements Screen {
 
 	private OrthographicCamera cam;
 
-	private Vector3 tmp = new Vector3();
-
 	public DemoScreen() {
 		spriteBatch = new SpriteBatch();
 		font = new BitmapFont();
 		font.setColor(Color.MAGENTA);
-		map = TiledLoader.createMap(Gdx.files.internal("map/demolevel.tmx"));
+		map = TiledLoader.createMap(Gdx.files.internal("map/demo.tmx"));
 		atlas = new TileAtlas(map, Gdx.files.internal("map/"));
 
 		// Not sure what these do completely
-		int blockWidth = 15;
-		int blockHeight = 10;
+		int blockWidth = 5;
+		int blockHeight = 5;
 
 		renderer = new TileMapRenderer(map, atlas, blockWidth, blockHeight,
 				TILE_WIDTH, TILE_HEIGHT);
+
 		cam = new OrthographicCamera(1024, 768);
 		cam.position.set(0, 0, 0);
 
@@ -53,15 +52,22 @@ public class DemoScreen implements Screen {
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		Gdx.gl.glClearColor(0, 1, 1, 1);
 		renderer.render(cam);
+
 		spriteBatch.begin();
 		{
 
 			font.draw(spriteBatch, "FPS: " + Gdx.graphics.getFramesPerSecond(),
 					20, 20);
-			tmp.set(0, 0, 0);
-			cam.unproject(tmp);
+			font.draw(spriteBatch,
+					"InitialCol, LastCol: " + renderer.getInitialCol() + ","
+							+ renderer.getLastCol(), 20, 40);
+			font.draw(spriteBatch,
+					"InitialRow, LastRow: " + renderer.getInitialRow() + ","
+							+ renderer.getLastRow(), 20, 60);
+
 			font.draw(spriteBatch, "Location: " + cam.position.x + ","
-					+ cam.position.y, 20, 40);
+					+ cam.position.y, 20, 80);
+
 		}
 		spriteBatch.end();
 
@@ -69,7 +75,16 @@ public class DemoScreen implements Screen {
 	}
 
 	private void update(float delta) {
+		cam.update();
 		Input input = Gdx.input;
+
+		if (input.isKeyPressed(Input.Keys.CONTROL_LEFT)) {
+			if (input.isKeyPressed(Input.Keys.D)) cam.position.x += 100;
+			if (input.isKeyPressed(Input.Keys.A)) cam.position.x -= 100;
+			if (input.isKeyPressed(Input.Keys.W)) cam.position.y -= 100;
+			if (input.isKeyPressed(Input.Keys.S)) cam.position.y += 100;
+		}
+
 		if (input.isKeyPressed(Input.Keys.D)) cam.position.x++;
 		if (input.isKeyPressed(Input.Keys.A)) cam.position.x--;
 		if (input.isKeyPressed(Input.Keys.W)) cam.position.y--;
