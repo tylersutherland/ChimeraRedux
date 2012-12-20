@@ -7,14 +7,13 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.tiled.TileAtlas;
 import com.badlogic.gdx.graphics.g2d.tiled.TileMapRenderer;
-import com.badlogic.gdx.graphics.g2d.tiled.TiledLayer;
 import com.badlogic.gdx.graphics.g2d.tiled.TiledLoader;
 import com.badlogic.gdx.graphics.g2d.tiled.TiledMap;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 
 public class DemoScreen implements Screen {
 	public static final int TILE_WIDTH = 64;
@@ -25,7 +24,7 @@ public class DemoScreen implements Screen {
 	private TileMapRenderer renderer;
 	private SpriteBatch spriteBatch;
 	private BitmapFont font;
-
+	TextureRegion tr;
 	private OrthographicCamera cam;
 
 	public DemoScreen() {
@@ -35,7 +34,6 @@ public class DemoScreen implements Screen {
 		map = TiledLoader.createMap(Gdx.files.internal("map/demo.tmx"));
 		atlas = new TileAtlas(map, Gdx.files.internal("map/"));
 
-		// Not sure what these do completely
 		int blockWidth = 5;
 		int blockHeight = 5;
 
@@ -55,7 +53,6 @@ public class DemoScreen implements Screen {
 
 		spriteBatch.begin();
 		{
-
 			font.draw(spriteBatch, "FPS: " + Gdx.graphics.getFramesPerSecond(),
 					20, 20);
 			font.draw(spriteBatch,
