@@ -1,1 +1,1 @@
-java -jar gdx-texturepacker.jar
+java -jar texturepacker_edited.jar rawmap map seasontiles

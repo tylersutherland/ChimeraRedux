@@ -1,0 +1,242 @@
+rawmap1.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+seasontiles
+  rotate: false
+  xy: 0, 0
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: 0
+seasontiles
+  rotate: false
+  xy: 66, 0
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: 1
+seasontiles
+  rotate: false
+  xy: 132, 0
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: 2
+seasontiles
+  rotate: false
+  xy: 198, 0
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: 3
+seasontiles
+  rotate: false
+  xy: 264, 0
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: 4
+seasontiles
+  rotate: false
+  xy: 330, 0
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: 5
+seasontiles
+  rotate: false
+  xy: 396, 0
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: 6
+seasontiles
+  rotate: false
+  xy: 0, 66
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: 3
+seasontiles
+  rotate: false
+  xy: 0, 132
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: 6
+seasontiles
+  rotate: false
+  xy: 0, 198
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: 9
+seasontiles
+  rotate: false
+  xy: 0, 264
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: 12
+seasontiles
+  rotate: false
+  xy: 0, 330
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: 15
+seasontiles
+  rotate: false
+  xy: 0, 396
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: 18
+seasontiles
+  rotate: false
+  xy: 66, 66
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: 4
+seasontiles
+  rotate: false
+  xy: 132, 66
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: 5
+seasontiles
+  rotate: false
+  xy: 198, 66
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: 6
+seasontiles
+  rotate: false
+  xy: 264, 66
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: 7
+seasontiles
+  rotate: false
+  xy: 330, 66
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: 8
+seasontiles
+  rotate: false
+  xy: 396, 66
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: 9
+seasontiles
+  rotate: false
+  xy: 66, 132
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: 7
+seasontiles
+  rotate: false
+  xy: 66, 198
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: 10
+seasontiles
+  rotate: false
+  xy: 66, 264
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: 13
+seasontiles
+  rotate: false
+  xy: 66, 330
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: 16
+seasontiles
+  rotate: false
+  xy: 66, 396
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: 19
+seasontiles
+  rotate: false
+  xy: 132, 132
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: 8
+seasontiles
+  rotate: false
+  xy: 198, 132
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: 9
+seasontiles
+  rotate: false
+  xy: 264, 132
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: 10
+seasontiles
+  rotate: false
+  xy: 330, 132
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: 11
+seasontiles
+  rotate: false
+  xy: 396, 132
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: 12
+seasontiles
+  rotate: false
+  xy: 132, 198
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: 11
+seasontiles
+  rotate: false
+  xy: 132, 264
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: 14
+seasontiles
+  rotate: false
+  xy: 132, 330
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: 17
+seasontiles
+  rotate: false
+  xy: 132, 396
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: 20
+seasontiles
+  rotate: false
+  xy: 198, 198
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: 12

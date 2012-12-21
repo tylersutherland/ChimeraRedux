@@ -14,14 +14,16 @@ import com.badlogic.gdx.graphics.g2d.tiled.TileAtlas;
 import com.badlogic.gdx.graphics.g2d.tiled.TileMapRenderer;
 import com.badlogic.gdx.graphics.g2d.tiled.TiledLoader;
 import com.badlogic.gdx.graphics.g2d.tiled.TiledMap;
+import com.danforallseasons.tiled.TiledMapAtlas;
+import com.danforallseasons.tiled.TiledMapRenderer;
 
 public class DemoScreen implements Screen {
 	public static final int TILE_WIDTH = 64;
 	public static final int TILE_HEIGHT = 64;
 
 	private TiledMap map;
-	private TileAtlas atlas;
-	private TileMapRenderer renderer;
+	private TiledMapAtlas atlas;
+	private TiledMapRenderer renderer;
 	private SpriteBatch spriteBatch;
 	private BitmapFont font;
 	TextureRegion tr;
@@ -32,13 +34,19 @@ public class DemoScreen implements Screen {
 		font = new BitmapFont();
 		font.setColor(Color.MAGENTA);
 		map = TiledLoader.createMap(Gdx.files.internal("map/demo.tmx"));
-		atlas = new TileAtlas(map, Gdx.files.internal("map/"));
+		atlas = new TiledMapAtlas(map, Gdx.files.internal("map/demo.pack"));
 
-		int blockWidth = 5;
-		int blockHeight = 5;
+		/*
+		 * prints out a text representation of the map for test purposes
+		 */
+		for (int i = 0; i < map.width; i++) {
+			for (int j = 0; j < map.height; j++) {
+				System.out.print(map.layers.get(0).tiles[i][j] + "\t");
+			}
+			System.out.println();
+		}
 
-		renderer = new TileMapRenderer(map, atlas, blockWidth, blockHeight,
-				TILE_WIDTH, TILE_HEIGHT);
+		renderer = new TiledMapRenderer(map, atlas);
 
 		cam = new OrthographicCamera(1024, 768);
 		cam.position.set(0, 0, 0);
@@ -49,18 +57,13 @@ public class DemoScreen implements Screen {
 	public void render(float delta) {
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		Gdx.gl.glClearColor(0, 1, 1, 1);
+
 		renderer.render(cam);
 
 		spriteBatch.begin();
 		{
 			font.draw(spriteBatch, "FPS: " + Gdx.graphics.getFramesPerSecond(),
 					20, 20);
-			font.draw(spriteBatch,
-					"InitialCol, LastCol: " + renderer.getInitialCol() + ","
-							+ renderer.getLastCol(), 20, 40);
-			font.draw(spriteBatch,
-					"InitialRow, LastRow: " + renderer.getInitialRow() + ","
-							+ renderer.getLastRow(), 20, 60);
 
 			font.draw(spriteBatch, "Location: " + cam.position.x + ","
 					+ cam.position.y, 20, 80);
