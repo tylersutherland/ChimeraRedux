@@ -88,6 +88,12 @@ public class TiledMapAtlas implements Disposable {
 		spriteSheet.dispose();
 	}
 
+	/**
+	 * 
+	 * @param tileId
+	 *            is the id of the texture in the sprite sheet
+	 * @return the texture that belongs to this id
+	 */
 	public TextureRegion getRegion(int tileId) {
 		return regionMap.get(tileId);
 

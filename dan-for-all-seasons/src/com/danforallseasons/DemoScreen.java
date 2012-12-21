@@ -48,8 +48,8 @@ public class DemoScreen implements Screen {
 
 		renderer = new TiledMapRenderer(map, atlas);
 
-		cam = new OrthographicCamera(1024, 768);
-		cam.position.set(0, 0, 0);
+		cam = new OrthographicCamera(1024f, 768f);
+		cam.position.set(512, -256, 0);
 
 	}
 
@@ -64,7 +64,12 @@ public class DemoScreen implements Screen {
 		{
 			font.draw(spriteBatch, "FPS: " + Gdx.graphics.getFramesPerSecond(),
 					20, 20);
-
+			font.draw(spriteBatch,
+					"Initial Col, Last Col " + renderer.getInitialCol() + ","
+							+ renderer.getLastCol(), 20, 60);
+			font.draw(spriteBatch,
+					"Initial Row, Last Row " + renderer.getInitialRow() + ","
+							+ renderer.getLastRow(), 20, 40);
 			font.draw(spriteBatch, "Location: " + cam.position.x + ","
 					+ cam.position.y, 20, 80);
 

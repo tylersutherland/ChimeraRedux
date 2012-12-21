@@ -16,6 +16,7 @@ public class DanForAllSeasons implements ApplicationListener {
 	@Override
 	public void create() {
 		demo = new DemoScreen();
+		
 	}
 
 	@Override

@@ -17,6 +17,14 @@ public class TiledMapRenderer implements Disposable {
 
 	private int tileWidth, tileHeight;
 
+	private int lastRow;
+
+	private int initialRow;
+
+	private int lastCol;
+
+	private int initialCol;
+
 	public TiledMapRenderer(TiledMap map, TiledMapAtlas atlas) {
 		this.map = map;
 		this.atlas = atlas;
@@ -30,21 +38,35 @@ public class TiledMapRenderer implements Disposable {
 		Vector3 tmp = new Vector3();
 		tmp.set(0, 0, 0);
 		cam.unproject(tmp);
-		int screenX = (int) cam.position.x;
-		int screenY = (int) cam.position.y;
-		int screenWidth = (int) cam.viewportWidth;
-		int screenHeight = (int) cam.viewportHeight;
+		//batch.setProjectionMatrix(cam.combined);
+		int x = (int) tmp.x;
+		int y = (int) tmp.y;
+		int width = (int) cam.viewportWidth;
+		int height = (int) cam.viewportHeight;
+
+		lastRow = (int) (y + height) / 64;
+
+		initialRow = (int) y / 64;
+		initialRow = (initialRow > 0) ? initialRow : 0; // Clamp initial Row
+														// > 0
+
+		lastCol = (int) (x + width) / 64;
+		initialCol = (int) x / 64;
+		initialCol = (initialCol > 0) ? initialCol : 0; // Clamp initial Col
+														// > 0
+
 		batch.begin();
 		{
 			// NOTE: i is y and x is j, y coords are upside down so subtract
 			// from the height
 			for (TiledLayer layer : map.layers) {
-				for (int i = 0; i < layer.getHeight(); i++)
-					for (int j = 0; j < layer.getWidth(); j++) {
+				for (int i = initialRow; i < lastRow; i++)
+					for (int j = initialCol; j < lastCol; j++) {
 						int tileId = layer.tiles[i][j];
 						if (tileId == 0) continue;
-						batch.draw(atlas.getRegion(tileId), screenX + j * 64,
-								screenHeight - (screenY + i * 64));
+						Gdx.app.log("XY", x + "," + y);
+						batch.draw(atlas.getRegion(tileId), x + j * 64, height
+								- (y + i * 64));
 					}
 			}
 		}
@@ -54,6 +76,22 @@ public class TiledMapRenderer implements Disposable {
 
 	public void dispose() {
 		batch.dispose();
+	}
+
+	public int getLastRow() {
+		return lastRow;
+	}
+
+	public int getInitialRow() {
+		return initialRow;
+	}
+
+	public int getLastCol() {
+		return lastCol;
+	}
+
+	public int getInitialCol() {
+		return initialCol;
 	}
 
 }
