@@ -48,8 +48,8 @@ public class DemoScreen implements Screen {
 
 		renderer = new TiledMapRenderer(map, atlas);
 
-		cam = new OrthographicCamera(1024f, 768f);
-		cam.position.set(512, -256, 0);
+		cam = new OrthographicCamera(16, 12);
+		cam.position.set(512/64, 256/64, 0);
 
 	}
 
@@ -80,20 +80,28 @@ public class DemoScreen implements Screen {
 	}
 
 	private void update(float delta) {
-		cam.update();
 		Input input = Gdx.input;
 
 		if (input.isKeyPressed(Input.Keys.CONTROL_LEFT)) {
-			if (input.isKeyPressed(Input.Keys.D)) cam.position.x += 100;
-			if (input.isKeyPressed(Input.Keys.A)) cam.position.x -= 100;
-			if (input.isKeyPressed(Input.Keys.W)) cam.position.y -= 100;
-			if (input.isKeyPressed(Input.Keys.S)) cam.position.y += 100;
+			if (input.isKeyPressed(Input.Keys.D))
+				cam.position.x += 100;
+			if (input.isKeyPressed(Input.Keys.A))
+				cam.position.x -= 100;
+			if (input.isKeyPressed(Input.Keys.W))
+				cam.position.y -= 100;
+			if (input.isKeyPressed(Input.Keys.S))
+				cam.position.y += 100;
 		}
 
-		if (input.isKeyPressed(Input.Keys.D)) cam.position.x++;
-		if (input.isKeyPressed(Input.Keys.A)) cam.position.x--;
-		if (input.isKeyPressed(Input.Keys.W)) cam.position.y--;
-		if (input.isKeyPressed(Input.Keys.S)) cam.position.y++;
+		if (input.isKeyPressed(Input.Keys.D))
+			cam.position.x++;
+		if (input.isKeyPressed(Input.Keys.A))
+			cam.position.x--;
+		if (input.isKeyPressed(Input.Keys.W))
+			cam.position.y--;
+		if (input.isKeyPressed(Input.Keys.S))
+			cam.position.y++;
+		cam.update();
 
 	}
 

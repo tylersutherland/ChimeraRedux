@@ -8,8 +8,8 @@ public class Main {
 		LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
 		cfg.title = "dan-for-all-seasons";
 		cfg.useGL20 = false;
-		cfg.width = 1024;
-		cfg.height = 768;
+		cfg.width = 800;
+		cfg.height = 600;
 		new LwjglApplication(new DanForAllSeasons(), cfg);
 	}
 }

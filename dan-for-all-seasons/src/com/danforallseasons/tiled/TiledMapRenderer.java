@@ -10,6 +10,8 @@ import com.badlogic.gdx.utils.Disposable;
 
 public class TiledMapRenderer implements Disposable {
 
+	private static final int PIXELS_PER_METER = 64;
+
 	private SpriteBatch batch;
 
 	private TiledMapAtlas atlas;
@@ -38,19 +40,21 @@ public class TiledMapRenderer implements Disposable {
 		Vector3 tmp = new Vector3();
 		tmp.set(0, 0, 0);
 		cam.unproject(tmp);
-		//batch.setProjectionMatrix(cam.combined);
+		// batch.setProjectionMatrix(cam.combined);
 		int x = (int) tmp.x;
 		int y = (int) tmp.y;
-		int width = (int) cam.viewportWidth;
-		int height = (int) cam.viewportHeight;
+		int width = (int) cam.viewportWidth * PIXELS_PER_METER;
+		int height = (int) cam.viewportHeight * PIXELS_PER_METER;
 
 		lastRow = (int) (y + height) / 64;
-
+		lastRow = (lastRow >= (map.height - 1)) ? map.height - 1 : lastRow;
 		initialRow = (int) y / 64;
 		initialRow = (initialRow > 0) ? initialRow : 0; // Clamp initial Row
 														// > 0
 
 		lastCol = (int) (x + width) / 64;
+		lastCol = (lastCol >= (map.width - 1)) ? map.width - 1 : lastCol;
+		
 		initialCol = (int) x / 64;
 		initialCol = (initialCol > 0) ? initialCol : 0; // Clamp initial Col
 														// > 0
@@ -63,10 +67,12 @@ public class TiledMapRenderer implements Disposable {
 				for (int i = initialRow; i < lastRow; i++)
 					for (int j = initialCol; j < lastCol; j++) {
 						int tileId = layer.tiles[i][j];
-						if (tileId == 0) continue;
-						Gdx.app.log("XY", x + "," + y);
-						batch.draw(atlas.getRegion(tileId), x + j * 64, height
-								- (y + i * 64));
+						if (tileId == 0)
+							continue;
+						// Gdx.app.log("XY", (x + j * 64) + ","
+						// + (height - (y + i * 64)));
+						batch.draw(atlas.getRegion(tileId), -x + j * 64, y
+								+ height - (i * 64));
 					}
 			}
 		}
