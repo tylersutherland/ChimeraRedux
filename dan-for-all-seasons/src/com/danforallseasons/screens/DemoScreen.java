@@ -1,4 +1,4 @@
-package com.danforallseasons;
+package com.danforallseasons.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -7,13 +7,11 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.g2d.tiled.TileAtlas;
-import com.badlogic.gdx.graphics.g2d.tiled.TileMapRenderer;
 import com.badlogic.gdx.graphics.g2d.tiled.TiledLoader;
 import com.badlogic.gdx.graphics.g2d.tiled.TiledMap;
+import com.danforallseasons.DanForAllSeasons;
 import com.danforallseasons.tiled.TiledMapAtlas;
 import com.danforallseasons.tiled.TiledMapRenderer;
 
@@ -28,8 +26,11 @@ public class DemoScreen implements Screen {
 	private BitmapFont font;
 	TextureRegion tr;
 	private OrthographicCamera cam;
+	
+	private DanForAllSeasons dan;
 
-	public DemoScreen() {
+	public DemoScreen(DanForAllSeasons d) {
+		this.dan = d;
 		spriteBatch = new SpriteBatch();
 		font = new BitmapFont();
 		font.setColor(Color.MAGENTA);
