@@ -46,16 +46,17 @@ public class TiledMapRenderer implements Disposable {
 		int width = (int) cam.viewportWidth * PIXELS_PER_METER;
 		int height = (int) cam.viewportHeight * PIXELS_PER_METER;
 
-		lastRow = (int) (y + height) / 64;
+		int overdrawX = 2;
+		int overdrawY = 2;
+		lastRow = (int) (y + height  ) / 64 +overdrawY;
 		lastRow = (lastRow >= (map.height - 1)) ? map.height - 1 : lastRow;
-		initialRow = (int) y / 64;
+		initialRow = (int) y / 64 - overdrawY;
 		initialRow = (initialRow > 0) ? initialRow : 0; // Clamp initial Row
 														// > 0
 
-		lastCol = (int) (x + width) / 64;
+		lastCol = (int) (x + width) / 64 + overdrawX;
 		lastCol = (lastCol >= (map.width - 1)) ? map.width - 1 : lastCol;
-		
-		initialCol = (int) x / 64;
+		initialCol = (int) x / 64 - overdrawX;
 		initialCol = (initialCol > 0) ? initialCol : 0; // Clamp initial Col
 														// > 0
 
