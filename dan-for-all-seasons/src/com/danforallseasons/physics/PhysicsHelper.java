@@ -7,6 +7,17 @@ import com.badlogic.gdx.utils.Array;
 
 public class PhysicsHelper {
 
+	/**
+	 * Uses the shape and some properties of tiles to get the map shape by
+	 * column
+	 * 
+	 * @param map
+	 *            is the tmx map
+	 * @param start
+	 *            is the point where you want to start getting the shape of the
+	 *            map
+	 * @return the collision shapes
+	 */
 	public static Array<Vector2[]> getCollisionShapes(TiledMap map,
 			Vector2 start) {
 
@@ -39,7 +50,7 @@ public class PhysicsHelper {
 					collisionShapes.add(shape.toArray(Vector2.class));
 				}
 				if (map.getTileProperty(tileId, "shape") == "downhill") {
-					shape.add(new Vector2(i, (j)));
+					shape.add(new Vector2(i, j));
 					shape.add(new Vector2((i + 1), j + 1));
 					j = findBottomOfShape(i, j, map, shape);
 
@@ -49,6 +60,19 @@ public class PhysicsHelper {
 			}
 		}
 		return collisionShapes;
+	}
+
+	/**
+	 * 
+	 * Uses the shape and some properties of tiles to get the map shape by
+	 * column
+	 * 
+	 * @param map
+	 *            is the tmx map
+	 * @return the collision shapes
+	 */
+	public static Array<Vector2[]> getCollisionShapes(TiledMap map) {
+		return getCollisionShapes(map, new Vector2(0, 0));
 	}
 
 	private static int findBottomOfShape(int i, int j, TiledMap map,
@@ -63,7 +87,4 @@ public class PhysicsHelper {
 		return j + 1;
 	}
 
-	public static Array<Vector2[]> getCollisionShapes(TiledMap map) {
-		return getCollisionShapes(map, new Vector2(0, 0));
-	}
 }

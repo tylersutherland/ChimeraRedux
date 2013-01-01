@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.tiled.TiledLoader;
 import com.badlogic.gdx.graphics.g2d.tiled.TiledMap;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -20,6 +21,7 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.danforallseasons.DanForAllSeasons;
+import com.danforallseasons.PhysicsDan;
 import com.danforallseasons.physics.PhysicsHelper;
 import com.danforallseasons.tiled.TiledMapAtlas;
 import com.danforallseasons.tiled.TiledMapRenderer;
@@ -27,7 +29,7 @@ import com.danforallseasons.tiled.TiledMapRenderer;
 public class DemoScreen implements Screen {
 	public static final int TILE_WIDTH = 64;
 	public static final int TILE_HEIGHT = 64;
-	private static final int PIXELS_PER_METER = 64;
+	private static final int PIXELS_PER_METER = TiledMapRenderer.PIXELS_PER_METER;
 
 	/* Map */
 	private TiledMap map;
@@ -36,6 +38,8 @@ public class DemoScreen implements Screen {
 
 	/* Rendering */
 	private SpriteBatch spriteBatch;
+
+	private SpriteBatch fontSpriteBatch;
 	private BitmapFont font;
 	private OrthographicCamera cam;
 
@@ -44,8 +48,11 @@ public class DemoScreen implements Screen {
 	private Array<Body> groundBodies;
 	private Box2DDebugRenderer physicsDebugRenderer;
 
+	private PhysicsDan pd;
+
 	public DemoScreen(DanForAllSeasons dan) {
 		spriteBatch = new SpriteBatch();
+		fontSpriteBatch = new SpriteBatch();
 		font = new BitmapFont();
 		font.setColor(Color.MAGENTA);
 		map = TiledLoader.createMap(Gdx.files.internal("map/demo.tmx"));
@@ -53,38 +60,26 @@ public class DemoScreen implements Screen {
 		map.setTileProperty(31, "shape", "uphill");
 		map.setTileProperty(24, "shape", "downhill");
 		setupPhysics();
-		
-		/*
-		 * prints out a text representation of the map for test purposes
-		 */
-		for (int i = 0; i < map.width; i++) {
-			for (int j = 0; j < map.height; j++) {
-				System.out.print(map.layers.get(0).tiles[i][j] + "\t");
-			}
-			System.out.println();
-		}
 
 		mapRenderer = new TiledMapRenderer(map, atlas);
 		physicsDebugRenderer = new Box2DDebugRenderer();
 		cam = new OrthographicCamera(
 				Gdx.graphics.getWidth() / PIXELS_PER_METER,
 				Gdx.graphics.getHeight() / PIXELS_PER_METER);
-		cam.position.set(Gdx.graphics.getWidth() / 2 / PIXELS_PER_METER,
-				Gdx.graphics.getHeight() / 2 / PIXELS_PER_METER, 0);
 
 		cam.setToOrtho(true, cam.viewportWidth, cam.viewportHeight);
+		cam.position.set(5, 6, 0);
 
 	}
 
 	private void setupPhysics() {
-		world = new World(new Vector2(0, -10), true);
+		world = new World(new Vector2(0, 10), true);
 		groundBodies = new Array<Body>();
 		Array<Vector2[]> groundVertices = PhysicsHelper.getCollisionShapes(map);
 		for (int i = 0; i < groundVertices.size; i++) {
 
 			PolygonShape groundPoly = new PolygonShape();
-			Vector2[] verts = groundVertices.get(i);
-			groundPoly.set(verts);
+			groundPoly.set(groundVertices.get(i));
 			BodyDef groundBodyDef = new BodyDef();
 			groundBodyDef.type = BodyType.StaticBody;
 			Body groundBody = world.createBody(groundBodyDef);
@@ -92,11 +87,14 @@ public class DemoScreen implements Screen {
 			FixtureDef fixtureDef = new FixtureDef();
 			fixtureDef.shape = groundPoly;
 			fixtureDef.filter.groupIndex = 0;
+			fixtureDef.friction = 0.5f;
 			groundBody.createFixture(fixtureDef);
 			groundPoly.dispose();
 
 			groundBodies.add(groundBody);
 		}
+		pd = new PhysicsDan(10, 10, world);
+
 	}
 
 	@Override
@@ -106,47 +104,39 @@ public class DemoScreen implements Screen {
 
 		mapRenderer.render(cam);
 		physicsDebugRenderer.render(world, cam.combined);
+
+		spriteBatch.setProjectionMatrix(cam.combined);
 		spriteBatch.begin();
 		{
-			font.draw(spriteBatch, "FPS: " + Gdx.graphics.getFramesPerSecond(),
-					20, 20);
-			font.draw(spriteBatch,
+			pd.draw(spriteBatch);
+		}
+		spriteBatch.end();
+
+		fontSpriteBatch.begin();
+		{
+
+			font.draw(fontSpriteBatch,
+					"FPS: " + Gdx.graphics.getFramesPerSecond(), 20, 20);
+			font.draw(fontSpriteBatch,
 					"Initial Col, Last Col " + mapRenderer.getInitialCol()
 							+ "," + mapRenderer.getLastCol(), 20, 60);
-			font.draw(spriteBatch,
+			font.draw(fontSpriteBatch,
 					"Initial Row, Last Row " + mapRenderer.getInitialRow()
 							+ "," + mapRenderer.getLastRow(), 20, 40);
-			font.draw(spriteBatch, "Location: " + cam.position.x + ","
+			font.draw(fontSpriteBatch, "Location: " + cam.position.x + ","
 					+ cam.position.y, 20, 80);
 
 		}
-		spriteBatch.end();
+		fontSpriteBatch.end();
 
 		update(delta);
 	}
 
 	private void update(float delta) {
+		world.step(delta, 4, 4);
 		Input input = Gdx.input;
-
-		if (input.isKeyPressed(Input.Keys.CONTROL_LEFT)) {
-			if (input.isKeyPressed(Input.Keys.D))
-				cam.position.x += 100;
-			if (input.isKeyPressed(Input.Keys.A))
-				cam.position.x -= 100;
-			if (input.isKeyPressed(Input.Keys.W))
-				cam.position.y -= 100;
-			if (input.isKeyPressed(Input.Keys.S))
-				cam.position.y += 100;
-		}
-
-		if (input.isKeyPressed(Input.Keys.D))
-			cam.position.x++;
-		if (input.isKeyPressed(Input.Keys.A))
-			cam.position.x--;
-		if (input.isKeyPressed(Input.Keys.W))
-			cam.position.y--;
-		if (input.isKeyPressed(Input.Keys.S))
-			cam.position.y++;
+		pd.update(input, delta);
+		cam.position.set(pd.getPosition());
 		cam.update();
 
 	}

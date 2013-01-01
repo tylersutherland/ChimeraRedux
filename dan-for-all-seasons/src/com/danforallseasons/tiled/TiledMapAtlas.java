@@ -1,6 +1,5 @@
 package com.danforallseasons.tiled;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -12,6 +11,8 @@ public class TiledMapAtlas implements Disposable {
 
 	private IntMap<TextureRegion> regionMap;
 	// TODO: Add functionality for multiple sprite sheets in the same pack file
+	// TODO: It's probably a good idea to get rid of the pack file completely
+	// the data is in the tmx file
 	private Texture spriteSheet;
 	private int tileWidth;
 	private int tileHeight;
@@ -58,28 +59,28 @@ public class TiledMapAtlas implements Disposable {
 
 			int index = getLinearPosition(x, y, spriteSheet.getWidth(),
 					spriteSheet.getHeight());
-
-			regionMap.put(index, new TextureRegion(spriteSheet, x, y,
-					tileWidth, tileHeight));
+			TextureRegion region = new TextureRegion(spriteSheet, x, y,
+					tileWidth, tileHeight);
+			region.flip(false, true);
+			regionMap.put(index, region);
 
 		}
 	}
 
 	private int getLinearPosition(int x, int y, int w, int h) {
-		if (x > 0) x -= 2;
-		if (y > 0) y -= 2;
+		if (x > 0)
+			x -= 2;
+		if (y > 0)
+			y -= 2;
 
-		x /= 64;
-		y /= 64;
-		w /= 64;
+		x /= tileWidth;
+		y /= tileHeight;
+		w /= tileWidth;
 		w -= 1;
-		h /= 64;
+		h /= tileHeight;
 		h -= 1;
 
-		Gdx.app.log("X,Y,W,D,I",
-				String.format("%d,%d,%d,%d,%d", x, y, w, h, x + y * w + 1));
-
-		return x + y * w + 1;
+		return x + y * w + indexOffset;
 
 	}
 
