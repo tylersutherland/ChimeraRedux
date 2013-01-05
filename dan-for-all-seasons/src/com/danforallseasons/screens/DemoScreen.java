@@ -3,6 +3,7 @@ package com.danforallseasons.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -30,7 +31,8 @@ public class DemoScreen implements Screen {
 	public static final int TILE_WIDTH = 64;
 	public static final int TILE_HEIGHT = 64;
 	private static final int PIXELS_PER_METER = TiledMapRenderer.PIXELS_PER_METER;
-
+	private static final String PAUSE_MSG = "Game Paused\r\nPress R to Resume";
+	
 	/* Map */
 	private TiledMap map;
 	private TiledMapAtlas atlas;
@@ -50,6 +52,8 @@ public class DemoScreen implements Screen {
 
 	private PhysicsDan pd;
 
+	private boolean gamePaused;
+	
 	public DemoScreen(DanForAllSeasons dan) {
 		spriteBatch = new SpriteBatch();
 		fontSpriteBatch = new SpriteBatch();
@@ -69,7 +73,8 @@ public class DemoScreen implements Screen {
 
 		cam.setToOrtho(true, cam.viewportWidth, cam.viewportHeight);
 		cam.position.set(5, 6, 0);
-
+		
+		gamePaused = false;
 	}
 
 	private void setupPhysics() {
@@ -94,7 +99,6 @@ public class DemoScreen implements Screen {
 			groundBodies.add(groundBody);
 		}
 		pd = new PhysicsDan(10, 10, world);
-
 	}
 
 	@Override
@@ -102,34 +106,67 @@ public class DemoScreen implements Screen {
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		Gdx.gl.glClearColor(0, 1, 1, 1);
 
-		mapRenderer.render(cam);
-		physicsDebugRenderer.render(world, cam.combined);
-
-		spriteBatch.setProjectionMatrix(cam.combined);
-		spriteBatch.begin();
-		{
-			pd.draw(spriteBatch);
+		if (gamePaused){
+			Gdx.gl.glClearColor(0.5f, 0.9f, 0.9f, 1);
+			
+			fontSpriteBatch.begin();
+			font.drawMultiLine(fontSpriteBatch,
+					PAUSE_MSG,
+					Gdx.graphics.getWidth() / 2 - font.getBounds(PAUSE_MSG).width / 2 + 50,
+					Gdx.graphics.getHeight() / 2 + font.getBounds(PAUSE_MSG).height / 2);
+			fontSpriteBatch.end();
+			
+			if (Gdx.input.isKeyPressed(Keys.R)){
+				Gdx.app.log(DanForAllSeasons.LOG, "Resuming Game");
+				resumeGame();
+			}
 		}
-		spriteBatch.end();
+		
+		if (!gamePaused){	
+			
+			if (Gdx.input.isKeyPressed(Keys.P)){
+				Gdx.app.log(DanForAllSeasons.LOG, "Pausing Game");
+				pauseGame();
+			}
+			
+			if (Gdx.input.isKeyPressed(Keys.ESCAPE)){
+				Gdx.app.log(DanForAllSeasons.LOG, "Quitting Game");
+				Gdx.app.exit();
+			}
+			
+			mapRenderer.render(cam);
+			physicsDebugRenderer.render(world, cam.combined);
 
-		fontSpriteBatch.begin();
-		{
+			spriteBatch.setProjectionMatrix(cam.combined);
+			spriteBatch.begin();
+			{
+				pd.draw(spriteBatch);
+			}
+			spriteBatch.end();
 
-			font.draw(fontSpriteBatch,
-					"FPS: " + Gdx.graphics.getFramesPerSecond(), 20, 20);
-			font.draw(fontSpriteBatch,
-					"Initial Col, Last Col " + mapRenderer.getInitialCol()
-							+ "," + mapRenderer.getLastCol(), 20, 60);
-			font.draw(fontSpriteBatch,
-					"Initial Row, Last Row " + mapRenderer.getInitialRow()
-							+ "," + mapRenderer.getLastRow(), 20, 40);
-			font.draw(fontSpriteBatch, "Location: " + cam.position.x + ","
-					+ cam.position.y, 20, 80);
+			fontSpriteBatch.begin();
+			{
+				font.draw(fontSpriteBatch,
+						"FPS: " + Gdx.graphics.getFramesPerSecond(), 20, 20);
+				font.draw(fontSpriteBatch,
+						"Initial Col, Last Col " + mapRenderer.getInitialCol()
+						+ "," + mapRenderer.getLastCol(), 20, 60);
+				font.draw(fontSpriteBatch,
+						"Initial Row, Last Row " + mapRenderer.getInitialRow()
+						+ "," + mapRenderer.getLastRow(), 20, 40);
+				font.draw(fontSpriteBatch, "Location: " + cam.position.x + ","
+						+ cam.position.y, 20, 80);
+				font.draw(fontSpriteBatch, "Press P to Pause",
+						Gdx.graphics.getWidth() - font.getBounds("Press P to Pause").width,
+						Gdx.graphics.getHeight());
+				font.draw(fontSpriteBatch, "Press Esc to Quit",
+						0,
+						Gdx.graphics.getHeight());
+			}
+			fontSpriteBatch.end();
 
+			update(delta);
 		}
-		fontSpriteBatch.end();
-
-		update(delta);
 	}
 
 	private void update(float delta) {
@@ -138,9 +175,16 @@ public class DemoScreen implements Screen {
 		pd.update(input, delta);
 		cam.position.set(pd.getPosition());
 		cam.update();
-
 	}
 
+	private void pauseGame(){
+		gamePaused = true;
+	}
+	
+	private void resumeGame(){
+		gamePaused = false;
+	}
+	
 	@Override
 	public void resize(int width, int height) {
 		// TODO Auto-generated method stub
@@ -161,8 +205,7 @@ public class DemoScreen implements Screen {
 
 	@Override
 	public void pause() {
-		// TODO Auto-generated method stub
-
+		pauseGame();
 	}
 
 	@Override

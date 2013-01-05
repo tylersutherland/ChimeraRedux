@@ -1,25 +1,30 @@
 package com.danforallseasons.screens;
 
+import aurelienribon.tweenengine.BaseTween;
+import aurelienribon.tweenengine.Tween;
+import aurelienribon.tweenengine.TweenCallback;
+import aurelienribon.tweenengine.TweenEquations;
+import aurelienribon.tweenengine.TweenManager;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.danforallseasons.DanForAllSeasons;
+import com.danforallseasons.tweenaccessors.SpriteAccessor;
 
 
 public class SplashScreen implements Screen {
 
-	private BitmapFont font;
 	private Texture texture;
 	private Sprite sprite;
 	private SpriteBatch spriteBatch;
 	private DanForAllSeasons dan;
+	private TweenManager manager;
 
 	public SplashScreen(DanForAllSeasons d) {
 		this.dan = d;
@@ -32,20 +37,17 @@ public class SplashScreen implements Screen {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		
-		if ((Gdx.input.isKeyPressed(Keys.ESCAPE)) || (Gdx.input.isTouched())) {
+		manager.update(delta);
+
+		spriteBatch.begin();
+		sprite.setPosition(Gdx.graphics.getWidth() / 2 - sprite.getWidth() / 2, Gdx.graphics.getHeight() / 2);
+		sprite.draw(spriteBatch);
+		spriteBatch.end();
+		
+		if ((Gdx.input.isKeyPressed(Keys.SPACE)) || (Gdx.input.isTouched())) {
 			Gdx.app.log(DanForAllSeasons.LOG, "Setting Screen to Menu");
             dan.setScreen(new MenuScreen(dan));
 		}
-		
-
-		spriteBatch.begin();{
-			sprite.draw(spriteBatch);
-			font.draw(spriteBatch, "Press ESC or Click for Main Menu....", 0, Gdx.graphics.getHeight());
-			font.draw(spriteBatch, "A game by", (Gdx.graphics.getWidth() / 2) - 35, (Gdx.graphics.getHeight() / 2) + 80);
-			font.draw(spriteBatch, "sunFlower studios", (Gdx.graphics.getWidth() / 2) - 60, (Gdx.graphics.getHeight() / 2) - 60);
-		}
-		spriteBatch.end();
-		
 	}
 
 	@Override
@@ -55,20 +57,41 @@ public class SplashScreen implements Screen {
 
 	@Override
 	public void show() {
-		font = new BitmapFont();
-		font.setColor(Color.WHITE);
-		spriteBatch = new SpriteBatch();
-		
 		texture = new Texture("YellowFlower.png");
 		texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		
-		
 		sprite = new Sprite(texture);
-		sprite.setX(Gdx.graphics.getWidth() / 2 - (sprite.getWidth() / 2));
-        sprite.setY(Gdx.graphics.getHeight() / 2 - (sprite.getHeight() / 2));
-        sprite.scale(1.1f);
+		sprite.setColor(1,1,1,0);
+		sprite.scale(2f);
+		
+		spriteBatch = new SpriteBatch();
+		
+		Tween.registerAccessor(Sprite.class, new SpriteAccessor());
+		
+		manager = new TweenManager();
+		
+		TweenCallback callback = new TweenCallback(){
+			@Override
+			public void onEvent(int type, BaseTween<?> source) {
+				tweenCompleted();
+			}
+		};
+		
+		Tween.to(sprite, SpriteAccessor.ALPHA, 1.25f)
+			.target(1)
+			.ease(TweenEquations.easeInQuad)
+			.repeatYoyo(1, 1.75f)
+			.setCallback(callback)
+			.setCallbackTriggers(TweenCallback.COMPLETE)
+			.start(manager);
+		
 	}
 
+	private void tweenCompleted(){
+		Gdx.app.log(DanForAllSeasons.LOG, "Setting Screen to Menu");
+        dan.setScreen(new MenuScreen(dan));
+	}
+	
 	@Override
 	public void hide() {
 		dispose();
