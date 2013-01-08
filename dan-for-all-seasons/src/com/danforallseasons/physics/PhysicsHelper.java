@@ -71,16 +71,4 @@ public class PhysicsHelper {
 		return getCollisionShapes(map, new Vector2(0, 0));
 	}
 
-	private static int findBottomOfShape(int i, int j, TiledMap map,
-			Array<Vector2> shape) {
-
-		while (map.layers.get(0).tiles[j + 1][i] != 0) {
-			j++;
-		}
-
-		shape.add(new Vector2((i + 1), (j + 1)));
-		shape.add(new Vector2(i, (j + 1)));
-		return j + 1;
-	}
-
 }

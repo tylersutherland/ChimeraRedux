@@ -2,7 +2,6 @@ package com.danforallseasons;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -26,13 +25,13 @@ public class PhysicsDan {
 	private TextureRegion standing;
 	private TextureRegion[] walkFrames;
 	private TextureRegion currentFrame;
-	
+
 	private boolean movingRight;
 	private boolean movingLeft;
 	private float stateTime;
-	
+
 	public PhysicsDan(float x, float y, World world) {
-		
+
 		PolygonShape danPoly = new PolygonShape();
 		danPoly.setAsBox(0.5f, 1f);
 		BodyDef bodyDef = new BodyDef();
@@ -43,29 +42,32 @@ public class PhysicsDan {
 		fixtureDef.shape = danPoly;
 		fixtureDef.filter.groupIndex = 0;
 		fixtureDef.friction = 0.5f;
+		fixtureDef.density = 1.0f;
 		body.createFixture(fixtureDef);
 		danPoly.dispose();
 
-		standing = new TextureRegion(new Texture(Gdx.files.internal("Dan2.png")));
+		standing = new TextureRegion(
+				new Texture(Gdx.files.internal("Dan2.png")));
 		standing.flip(false, true);
-		
+
 		walkSheet = new Texture("danWalkSheet.png");
-		TextureRegion[][] temp = TextureRegion.split(walkSheet,walkSheet.getWidth() / 2, walkSheet.getHeight() / 2);
+		TextureRegion[][] temp = TextureRegion.split(walkSheet,
+				walkSheet.getWidth() / 2, walkSheet.getHeight() / 2);
 		walkFrames = new TextureRegion[4];
-		
+
 		int index = 0;
-		for (int i = 0; i < 2; i++){
-			for (int j = 0; j < 2; j++){
+		for (int i = 0; i < 2; i++) {
+			for (int j = 0; j < 2; j++) {
 				walkFrames[index++] = temp[i][j];
 			}
 		}
-		
-		for (int i = 0; i < 4; i++){
+
+		for (int i = 0; i < 4; i++) {
 			walkFrames[i].flip(false, true);
 		}
-		
+
 		walkAnimation = new Animation(0.05f, walkFrames);
-		stateTime =	0f;
+		stateTime = 0f;
 	}
 
 	public void draw(SpriteBatch batch) {
@@ -73,27 +75,32 @@ public class PhysicsDan {
 		stateTime += Gdx.graphics.getDeltaTime();
 
 		currentFrame = walkAnimation.getKeyFrame(stateTime, true);
-		
-		if (movingRight){
+
+		if (movingRight) {
 			batch.draw(currentFrame, pos.x, pos.y, 0, 0,
-					currentFrame.getRegionWidth(), currentFrame.getRegionHeight(),
-					1f / TiledMapRenderer.PIXELS_PER_METER,	1f / TiledMapRenderer.PIXELS_PER_METER, 0);
+					currentFrame.getRegionWidth(),
+					currentFrame.getRegionHeight(),
+					1f / TiledMapRenderer.PIXELS_PER_METER,
+					1f / TiledMapRenderer.PIXELS_PER_METER, 0);
 		}
-		else if (movingLeft){
+		else if (movingLeft) {
 			batch.draw(currentFrame, pos.x + 1, pos.y, 0, 0,
-					currentFrame.getRegionWidth(), currentFrame.getRegionHeight(),
-					-1f / TiledMapRenderer.PIXELS_PER_METER, 1f / TiledMapRenderer.PIXELS_PER_METER, 0);
+					currentFrame.getRegionWidth(),
+					currentFrame.getRegionHeight(), -1f
+							/ TiledMapRenderer.PIXELS_PER_METER,
+					1f / TiledMapRenderer.PIXELS_PER_METER, 0);
 		}
-		else{
-			batch.draw(standing, pos.x, pos.y, 0, 0,
-					standing.getRegionWidth(), standing.getRegionHeight(),
-					1f / TiledMapRenderer.PIXELS_PER_METER, 1f / TiledMapRenderer.PIXELS_PER_METER, 0);
+		else {
+			batch.draw(standing, pos.x, pos.y, 0, 0, standing.getRegionWidth(),
+					standing.getRegionHeight(),
+					1f / TiledMapRenderer.PIXELS_PER_METER,
+					1f / TiledMapRenderer.PIXELS_PER_METER, 0);
 		}
 	}
 
 	public void update(Input in, float delta) {
 		notMoving();
-		
+
 		if (in.isKeyPressed(Input.Keys.D)) {
 			body.applyLinearImpulse(new Vector2(1f, 0), body.getPosition());
 			moveRight();
@@ -108,23 +115,25 @@ public class PhysicsDan {
 		if (in.isKeyPressed(Input.Keys.S)) {
 			body.applyLinearImpulse(new Vector2(0f, 1f), body.getPosition());
 		}
+
+		Gdx.app.log("Rot", body.getAngle() + "");
 	}
 
-	private void moveRight(){
+	private void moveRight() {
 		movingRight = true;
 		movingLeft = false;
 	}
-	
-	private void moveLeft(){
+
+	private void moveLeft() {
 		movingLeft = true;
 		movingRight = false;
 	}
-	
-	private void notMoving(){
+
+	private void notMoving() {
 		movingRight = false;
 		movingLeft = false;
 	}
-	
+
 	public Vector3 getPosition() {
 		return new Vector3(body.getPosition().x, body.getPosition().y, 0);
 	}
