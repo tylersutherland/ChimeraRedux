@@ -17,6 +17,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.EdgeShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
@@ -32,7 +33,7 @@ public class DemoScreen implements Screen {
 	public static final int TILE_HEIGHT = 64;
 	private static final int PIXELS_PER_METER = TiledMapRenderer.PIXELS_PER_METER;
 	private static final String PAUSE_MSG = "Game Paused\r\nPress R to Resume";
-	
+
 	/* Map */
 	private TiledMap map;
 	private TiledMapAtlas atlas;
@@ -53,7 +54,7 @@ public class DemoScreen implements Screen {
 	private PhysicsDan pd;
 
 	private boolean gamePaused;
-	
+
 	public DemoScreen(DanForAllSeasons dan) {
 		spriteBatch = new SpriteBatch();
 		fontSpriteBatch = new SpriteBatch();
@@ -73,7 +74,7 @@ public class DemoScreen implements Screen {
 
 		cam.setToOrtho(true, cam.viewportWidth, cam.viewportHeight);
 		cam.position.set(5, 6, 0);
-		
+
 		gamePaused = false;
 	}
 
@@ -83,8 +84,10 @@ public class DemoScreen implements Screen {
 		Array<Vector2[]> groundVertices = PhysicsHelper.getCollisionShapes(map);
 		for (int i = 0; i < groundVertices.size; i++) {
 
-			PolygonShape groundPoly = new PolygonShape();
-			groundPoly.set(groundVertices.get(i));
+			EdgeShape groundPoly = new EdgeShape();
+			Vector2 a = groundVertices.get(i)[0];
+			Vector2 b = groundVertices.get(i)[1];
+			groundPoly.set(a, b);
 			BodyDef groundBodyDef = new BodyDef();
 			groundBodyDef.type = BodyType.StaticBody;
 			Body groundBody = world.createBody(groundBodyDef);
@@ -106,34 +109,35 @@ public class DemoScreen implements Screen {
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		Gdx.gl.glClearColor(0, 1, 1, 1);
 
-		if (gamePaused){
+		if (gamePaused) {
 			Gdx.gl.glClearColor(0.5f, 0.9f, 0.9f, 1);
-			
+
 			fontSpriteBatch.begin();
-			font.drawMultiLine(fontSpriteBatch,
-					PAUSE_MSG,
-					Gdx.graphics.getWidth() / 2 - font.getBounds(PAUSE_MSG).width / 2 + 50,
-					Gdx.graphics.getHeight() / 2 + font.getBounds(PAUSE_MSG).height / 2);
+			font.drawMultiLine(fontSpriteBatch, PAUSE_MSG,
+					Gdx.graphics.getWidth() / 2
+							- font.getBounds(PAUSE_MSG).width / 2 + 50,
+					Gdx.graphics.getHeight() / 2
+							+ font.getBounds(PAUSE_MSG).height / 2);
 			fontSpriteBatch.end();
-			
-			if (Gdx.input.isKeyPressed(Keys.R)){
+
+			if (Gdx.input.isKeyPressed(Keys.R)) {
 				Gdx.app.log(DanForAllSeasons.LOG, "Resuming Game");
 				resumeGame();
 			}
 		}
-		
-		if (!gamePaused){	
-			
-			if (Gdx.input.isKeyPressed(Keys.P)){
+
+		if (!gamePaused) {
+
+			if (Gdx.input.isKeyPressed(Keys.P)) {
 				Gdx.app.log(DanForAllSeasons.LOG, "Pausing Game");
 				pauseGame();
 			}
-			
-			if (Gdx.input.isKeyPressed(Keys.ESCAPE)){
+
+			if (Gdx.input.isKeyPressed(Keys.ESCAPE)) {
 				Gdx.app.log(DanForAllSeasons.LOG, "Quitting Game");
 				Gdx.app.exit();
 			}
-			
+
 			mapRenderer.render(cam);
 			physicsDebugRenderer.render(world, cam.combined);
 
@@ -150,17 +154,19 @@ public class DemoScreen implements Screen {
 						"FPS: " + Gdx.graphics.getFramesPerSecond(), 20, 20);
 				font.draw(fontSpriteBatch,
 						"Initial Col, Last Col " + mapRenderer.getInitialCol()
-						+ "," + mapRenderer.getLastCol(), 20, 60);
+								+ "," + mapRenderer.getLastCol(), 20, 60);
 				font.draw(fontSpriteBatch,
 						"Initial Row, Last Row " + mapRenderer.getInitialRow()
-						+ "," + mapRenderer.getLastRow(), 20, 40);
+								+ "," + mapRenderer.getLastRow(), 20, 40);
 				font.draw(fontSpriteBatch, "Location: " + cam.position.x + ","
 						+ cam.position.y, 20, 80);
-				font.draw(fontSpriteBatch, "Press P to Pause",
-						Gdx.graphics.getWidth() - font.getBounds("Press P to Pause").width,
+				font.draw(
+						fontSpriteBatch,
+						"Press P to Pause",
+						Gdx.graphics.getWidth()
+								- font.getBounds("Press P to Pause").width,
 						Gdx.graphics.getHeight());
-				font.draw(fontSpriteBatch, "Press Esc to Quit",
-						0,
+				font.draw(fontSpriteBatch, "Press Esc to Quit", 0,
 						Gdx.graphics.getHeight());
 			}
 			fontSpriteBatch.end();
@@ -177,14 +183,14 @@ public class DemoScreen implements Screen {
 		cam.update();
 	}
 
-	private void pauseGame(){
+	private void pauseGame() {
 		gamePaused = true;
 	}
-	
-	private void resumeGame(){
+
+	private void resumeGame() {
 		gamePaused = false;
 	}
-	
+
 	@Override
 	public void resize(int width, int height) {
 		// TODO Auto-generated method stub

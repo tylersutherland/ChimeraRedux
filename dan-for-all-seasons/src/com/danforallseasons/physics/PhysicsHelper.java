@@ -30,29 +30,25 @@ public class PhysicsHelper {
 		for (int i = (int) start.x; i < width; i++) {
 			for (int j = (int) start.y; j < height; j++) {
 				int tileId = layer.tiles[j][i];
-				if (tileId == 0)
-					continue;
+				if (tileId == 0) continue;
 
 				shape.clear();
 
 				if (map.getTileProperty(tileId, "shape") == null) {
 					shape.add(new Vector2(i, j));
 					shape.add(new Vector2((i + 1), j));
-					j = findBottomOfShape(i, j, map, shape);
 
 					collisionShapes.add(shape.toArray(Vector2.class));
 				}
 				if (map.getTileProperty(tileId, "shape") == "uphill") {
 					shape.add(new Vector2(i, (j + 1)));
 					shape.add(new Vector2((i + 1), j));
-					j = findBottomOfShape(i, j, map, shape);
 
 					collisionShapes.add(shape.toArray(Vector2.class));
 				}
 				if (map.getTileProperty(tileId, "shape") == "downhill") {
 					shape.add(new Vector2(i, j));
 					shape.add(new Vector2((i + 1), j + 1));
-					j = findBottomOfShape(i, j, map, shape);
 
 					collisionShapes.add(shape.toArray(Vector2.class));
 				}
