@@ -1,1 +1,0 @@
-java -jar texturepacker_edited.jar rawmap map seasontiles

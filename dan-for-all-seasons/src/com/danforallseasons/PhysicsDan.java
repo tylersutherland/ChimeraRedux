@@ -116,7 +116,6 @@ public class PhysicsDan {
 			body.applyLinearImpulse(new Vector2(0f, 1f), body.getPosition());
 		}
 
-		Gdx.app.log("Rot", body.getAngle() + "");
 	}
 
 	private void moveRight() {
