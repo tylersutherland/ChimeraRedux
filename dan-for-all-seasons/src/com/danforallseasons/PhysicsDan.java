@@ -42,7 +42,6 @@ public class PhysicsDan {
 		fixtureDef.shape = danPoly;
 		fixtureDef.filter.groupIndex = 0;
 		fixtureDef.friction = 0.5f;
-		fixtureDef.density = 1.0f;
 		body.createFixture(fixtureDef);
 		danPoly.dispose();
 
