@@ -46,7 +46,7 @@ public class TiledMapAtlas implements Disposable {
 		int currentIndex = 0;
 		spriteSheet = new Texture(path
 				+ contents.substring(0, contents.indexOf('\n')).trim());
-		
+
 		while ((currentIndex = contents.indexOf("xy:", currentIndex)) != -1) {
 
 			int endIndex = contents.indexOf(',', currentIndex);
@@ -67,7 +67,6 @@ public class TiledMapAtlas implements Disposable {
 
 			int index = getLinearPosition(x, y, spriteSheet.getWidth(),
 					spriteSheet.getHeight());
-
 			TextureRegion region = new TextureRegion(spriteSheet, x, y,
 					tileWidth, tileHeight);
 
@@ -79,15 +78,11 @@ public class TiledMapAtlas implements Disposable {
 	}
 
 	private int getLinearPosition(int x, int y, int w, int h) {
-		if (x > 0) x -= 2;
-		if (y > 0) y -= 2;
 
 		x /= tileWidth;
 		y /= tileHeight;
 		w /= tileWidth;
-		w -= 1;
 		h /= tileHeight;
-		h -= 1;
 
 		return x + y * w + indexOffset;
 

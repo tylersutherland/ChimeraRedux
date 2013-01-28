@@ -65,22 +65,23 @@ public class TiledMapRenderer implements Disposable {
 		{
 			// NOTE: i is y and x is j, y coords are upside down so subtract
 			// from the height
-			for (TiledLayer layer : map.layers) {
-				for (int i = initialRow; i < lastRow; i++)
-					for (int j = initialCol; j < lastCol; j++) {
-						int tileId = layer.tiles[i][j];
-						if (tileId == 0) continue;
 
-						/**
-						 * This is stupid and just for debugging
-						 */
-						if (atlas.getRegion(tileId) == null) continue;
+			for (int i = initialRow; i < lastRow; i++)
+				for (int j = initialCol; j < lastCol; j++) {
+					int tileId = map.layers.get(1).tiles[i][j];
+					if (tileId == 0) continue;
 
-						batch.draw(atlas.getRegion(tileId), j, i, 0, 0,
-								tileWidth, tileHeight, 1f / PIXELS_PER_METER,
-								1f / PIXELS_PER_METER, 0);
-					}
-			}
+					/**
+					 * This is stupid and just for debugging
+					 */
+					if (atlas.getRegion(tileId) == null) continue;
+
+
+					batch.draw(atlas.getRegion(tileId), j, i, 0, 0, tileWidth,
+							tileHeight, 1f / PIXELS_PER_METER,
+							1f / PIXELS_PER_METER, 0);
+				}
+
 		}
 		batch.end();
 

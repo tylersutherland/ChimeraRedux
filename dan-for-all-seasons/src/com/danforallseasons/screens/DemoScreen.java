@@ -62,8 +62,6 @@ public class DemoScreen implements Screen {
 		font.setColor(Color.MAGENTA);
 		map = TiledLoader.createMap(Gdx.files.internal("map/demo.tmx"));
 		atlas = new TiledMapAtlas(map, Gdx.files.internal("map/demo.pack"));
-		map.setTileProperty(31, "shape", "uphill");
-		map.setTileProperty(24, "shape", "downhill");
 		setupPhysics();
 
 		mapRenderer = new TiledMapRenderer(map, atlas);

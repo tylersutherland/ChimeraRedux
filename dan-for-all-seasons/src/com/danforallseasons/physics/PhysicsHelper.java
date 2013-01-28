@@ -1,5 +1,6 @@
 package com.danforallseasons.physics;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.tiled.TiledLayer;
 import com.badlogic.gdx.graphics.g2d.tiled.TiledMap;
 import com.badlogic.gdx.math.Vector2;
@@ -33,26 +34,26 @@ public class PhysicsHelper {
 				if (tileId == 0) continue;
 
 				shape.clear();
-
+				Gdx.app.log("props", map.getTileProperty(tileId, "shape"));
 				if (map.getTileProperty(tileId, "shape") == null) {
 					shape.add(new Vector2(i, j));
 					shape.add(new Vector2((i + 1), j));
 
 					collisionShapes.add(shape.toArray(Vector2.class));
 				}
-				if (map.getTileProperty(tileId, "shape") == "uphill") {
+				else if (map.getTileProperty(tileId, "shape").equals("uphill")) {
 					shape.add(new Vector2(i, (j + 1)));
 					shape.add(new Vector2((i + 1), j));
-
+					Gdx.app.log("uphill", "" + i);
 					collisionShapes.add(shape.toArray(Vector2.class));
 				}
-				if (map.getTileProperty(tileId, "shape") == "downhill") {
+				else if (map.getTileProperty(tileId, "shape").equals("downhill")) {
 					shape.add(new Vector2(i, j));
 					shape.add(new Vector2((i + 1), j + 1));
-
+					Gdx.app.log("downhill", "" + i);
 					collisionShapes.add(shape.toArray(Vector2.class));
 				}
-
+				break;
 			}
 		}
 		return collisionShapes;
