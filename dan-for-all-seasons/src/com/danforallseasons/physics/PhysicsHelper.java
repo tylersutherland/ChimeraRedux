@@ -44,13 +44,12 @@ public class PhysicsHelper {
 				else if (map.getTileProperty(tileId, "shape").equals("uphill")) {
 					shape.add(new Vector2(i, (j + 1)));
 					shape.add(new Vector2((i + 1), j));
-					Gdx.app.log("uphill", "" + i);
 					collisionShapes.add(shape.toArray(Vector2.class));
 				}
-				else if (map.getTileProperty(tileId, "shape").equals("downhill")) {
+				else if (map.getTileProperty(tileId, "shape")
+						.equals("downhill")) {
 					shape.add(new Vector2(i, j));
 					shape.add(new Vector2((i + 1), j + 1));
-					Gdx.app.log("downhill", "" + i);
 					collisionShapes.add(shape.toArray(Vector2.class));
 				}
 				break;

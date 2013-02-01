@@ -27,6 +27,8 @@ public class TiledMapRenderer implements Disposable {
 
 	private int initialCol;
 
+	private int currentLayer;
+
 	public TiledMapRenderer(TiledMap map, TiledMapAtlas atlas) {
 		this.map = map;
 		this.atlas = atlas;
@@ -68,14 +70,8 @@ public class TiledMapRenderer implements Disposable {
 
 			for (int i = initialRow; i < lastRow; i++)
 				for (int j = initialCol; j < lastCol; j++) {
-					int tileId = map.layers.get(1).tiles[i][j];
+					int tileId = map.layers.get(currentLayer).tiles[i][j];
 					if (tileId == 0) continue;
-
-					/**
-					 * This is stupid and just for debugging
-					 */
-					if (atlas.getRegion(tileId) == null) continue;
-
 
 					batch.draw(atlas.getRegion(tileId), j, i, 0, 0, tileWidth,
 							tileHeight, 1f / PIXELS_PER_METER,
@@ -105,6 +101,12 @@ public class TiledMapRenderer implements Disposable {
 
 	public int getInitialCol() {
 		return initialCol;
+	}
+
+	public void changeLayer() {
+		currentLayer++;
+		currentLayer %= map.layers.size();
+
 	}
 
 }

@@ -179,6 +179,7 @@ public class DemoScreen implements Screen {
 		pd.update(input, delta);
 		cam.position.set(pd.getPosition());
 		cam.update();
+		if (input.justTouched()) mapRenderer.changeLayer();
 	}
 
 	private void pauseGame() {
