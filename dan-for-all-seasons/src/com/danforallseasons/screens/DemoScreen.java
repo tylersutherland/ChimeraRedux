@@ -54,8 +54,11 @@ public class DemoScreen implements Screen {
 	private PhysicsDan pd;
 
 	private boolean gamePaused;
+	
+	private DanForAllSeasons dan;
 
 	public DemoScreen(DanForAllSeasons dan) {
+		this.dan = dan;
 		spriteBatch = new SpriteBatch();
 		fontSpriteBatch = new SpriteBatch();
 		font = new BitmapFont();
@@ -136,6 +139,11 @@ public class DemoScreen implements Screen {
 				Gdx.app.exit();
 			}
 
+			if (Gdx.input.isKeyPressed(Keys.R)) {
+				Gdx.app.log(DanForAllSeasons.LOG, "Restting Demo");
+				dan.setScreen(new DemoScreen(dan));
+			}
+			
 			mapRenderer.render(cam);
 			physicsDebugRenderer.render(world, cam.combined);
 
@@ -163,9 +171,18 @@ public class DemoScreen implements Screen {
 						"Press P to Pause",
 						Gdx.graphics.getWidth()
 								- font.getBounds("Press P to Pause").width,
+						Gdx.graphics.getHeight());				
+				font.draw(
+						fontSpriteBatch, 
+						"Press Esc to Quit", 0,
 						Gdx.graphics.getHeight());
-				font.draw(fontSpriteBatch, "Press Esc to Quit", 0,
+				
+				font.draw(
+						fontSpriteBatch, 
+						"Press R to Restart", Gdx.graphics.getWidth() / 2
+								- font.getBounds("Press R to Restart").width / 2,
 						Gdx.graphics.getHeight());
+						
 			}
 			fontSpriteBatch.end();
 

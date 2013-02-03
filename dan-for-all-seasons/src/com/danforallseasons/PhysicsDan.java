@@ -18,6 +18,7 @@ import com.danforallseasons.tiled.TiledMapRenderer;
 
 public class PhysicsDan {
 	private Body body;
+	private Vector2[] danVertices;
 	private boolean jump;
 
 	private Animation walkAnimation;
@@ -33,7 +34,9 @@ public class PhysicsDan {
 	public PhysicsDan(float x, float y, World world) {
 
 		PolygonShape danPoly = new PolygonShape();
-		danPoly.setAsBox(0.5f, 1f);
+		createShape();
+		danPoly.set(danVertices);
+		
 		BodyDef bodyDef = new BodyDef();
 		bodyDef.type = BodyType.DynamicBody;
 		body = world.createBody(bodyDef);
@@ -65,7 +68,8 @@ public class PhysicsDan {
 			walkFrames[i].flip(false, true);
 		}
 
-		walkAnimation = new Animation(0.05f, walkFrames);
+		walkAnimation = new Animation(0.1f, walkFrames);
+		
 		stateTime = 0f;
 	}
 
@@ -101,18 +105,18 @@ public class PhysicsDan {
 		notMoving();
 
 		if (in.isKeyPressed(Input.Keys.D)) {
-			body.applyLinearImpulse(new Vector2(1f, 0), body.getPosition());
+			if (!(body.getLinearVelocity().x > 10.0f)) body.applyLinearImpulse(new Vector2(1f, 0), body.getPosition());
 			moveRight();
 		}
 		if (in.isKeyPressed(Input.Keys.A)) {
-			body.applyLinearImpulse(new Vector2(-1f, 0), body.getPosition());
+			if (!(body.getLinearVelocity().x < -10.0f)) body.applyLinearImpulse(new Vector2(-1f, 0), body.getPosition());
 			moveLeft();
 		}
 		if (in.isKeyPressed(Input.Keys.W)) {
-			body.applyLinearImpulse(new Vector2(0f, -1f), body.getPosition());
+			if (!(body.getLinearVelocity().y < -10.0f)) body.applyLinearImpulse(new Vector2(0f, -1f), body.getPosition());
 		}
 		if (in.isKeyPressed(Input.Keys.S)) {
-			body.applyLinearImpulse(new Vector2(0f, 1f), body.getPosition());
+			if (!(body.getLinearVelocity().y > 10.0f)) body.applyLinearImpulse(new Vector2(0f, 1f), body.getPosition());
 		}
 
 	}
@@ -134,5 +138,24 @@ public class PhysicsDan {
 
 	public Vector3 getPosition() {
 		return new Vector3(body.getPosition().x, body.getPosition().y, 0);
+	}
+	
+	public void createShape() {
+		//Setting up the vector array
+		danVertices = new Vector2[6];
+		danVertices[0] = new Vector2();
+		danVertices[1] = new Vector2();
+		danVertices[2] = new Vector2();
+		danVertices[3] = new Vector2();
+		danVertices[4] = new Vector2();
+		danVertices[5] = new Vector2();
+	
+		//Setting all the vertices
+		danVertices[0].set(0.45f,  -0.9f);
+		danVertices[1].set(0.45f,  0.65f);
+		danVertices[2].set(0.1f,  1.0f);
+		danVertices[3].set(-0.1f, 1.0f);
+		danVertices[4].set(-0.45f,  0.65f);
+		danVertices[5].set(-0.45f,  -0.9f);
 	}
 }
