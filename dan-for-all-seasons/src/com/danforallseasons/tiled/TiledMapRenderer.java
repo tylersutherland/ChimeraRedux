@@ -1,9 +1,7 @@
 package com.danforallseasons.tiled;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.tiled.TiledLayer;
 import com.badlogic.gdx.graphics.g2d.tiled.TiledMap;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Disposable;
@@ -15,6 +13,7 @@ public class TiledMapRenderer implements Disposable {
 	private SpriteBatch batch;
 
 	private TiledMapAtlas atlas;
+
 	private TiledMap map;
 
 	private int tileWidth, tileHeight;
@@ -71,7 +70,8 @@ public class TiledMapRenderer implements Disposable {
 			for (int i = initialRow; i < lastRow; i++)
 				for (int j = initialCol; j < lastCol; j++) {
 					int tileId = map.layers.get(currentLayer).tiles[i][j];
-					if (tileId == 0) continue;
+					if (tileId == 0)
+						continue;
 
 					batch.draw(atlas.getRegion(tileId), j, i, 0, 0, tileWidth,
 							tileHeight, 1f / PIXELS_PER_METER,

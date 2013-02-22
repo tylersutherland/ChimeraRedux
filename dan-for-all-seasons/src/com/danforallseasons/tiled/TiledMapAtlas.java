@@ -100,7 +100,21 @@ public class TiledMapAtlas implements Disposable {
 	 * @return the texture that belongs to this id
 	 */
 	public TextureRegion getRegion(int tileId) {
-		return regionMap.get(tileId);
+
+		TextureRegion tr = regionMap.get(tileId);
+
+		if (tr == null) {
+
+			int w = spriteSheet.getWidth() / tileWidth;
+			int h = spriteSheet.getHeight() / tileHeight;
+			int x = tileId % w - 1;
+			int y = tileId % h + x;
+			tr = new TextureRegion(spriteSheet, x * tileWidth, y * tileHeight,
+					tileWidth, tileHeight);
+			tr.flip(false, true);
+		}
+
+		return tr;
 
 	}
 }

@@ -35,11 +35,9 @@ public class PhysicsHelper {
 					continue;
 
 				shape.clear();
-				Gdx.app.log("props", map.getTileProperty(tileId, "shape"));
 				if (map.getTileProperty(tileId, "shape") == null) {
 					shape.add(new Vector2(i, j));
 					shape.add(new Vector2((i + 1), j));
-
 					collisionShapes.add(shape.toArray(Vector2.class));
 				} else if (map.getTileProperty(tileId, "shape")
 						.equals("uphill")) {
@@ -51,7 +49,8 @@ public class PhysicsHelper {
 					shape.add(new Vector2(i, j));
 					shape.add(new Vector2((i + 1), j + 1));
 					collisionShapes.add(shape.toArray(Vector2.class));
-				}
+				} else
+					continue;
 				break;
 			}
 		}
