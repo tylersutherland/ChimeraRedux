@@ -107,8 +107,9 @@ public class TiledMapAtlas implements Disposable {
 
 			int w = spriteSheet.getWidth() / tileWidth;
 			int h = spriteSheet.getHeight() / tileHeight;
-			int x = tileId % w - 1;
+			int x = tileId % (w - 1);
 			int y = tileId % h + x;
+			Gdx.app.log("tileId,x,y", tileId + "," + x + "," + y);
 			tr = new TextureRegion(spriteSheet, x * tileWidth, y * tileHeight,
 					tileWidth, tileHeight);
 			tr.flip(false, true);
