@@ -31,7 +31,8 @@ public class PhysicsHelper {
 		for (int i = (int) start.x; i < width; i++) {
 			for (int j = (int) start.y; j < height; j++) {
 				int tileId = layer.tiles[j][i];
-				if (tileId == 0) continue;
+				if (tileId == 0)
+					continue;
 
 				shape.clear();
 				Gdx.app.log("props", map.getTileProperty(tileId, "shape"));
@@ -40,14 +41,13 @@ public class PhysicsHelper {
 					shape.add(new Vector2((i + 1), j));
 
 					collisionShapes.add(shape.toArray(Vector2.class));
-				}
-				else if (map.getTileProperty(tileId, "shape").equals("uphill")) {
+				} else if (map.getTileProperty(tileId, "shape")
+						.equals("uphill")) {
 					shape.add(new Vector2(i, (j + 1)));
 					shape.add(new Vector2((i + 1), j));
 					collisionShapes.add(shape.toArray(Vector2.class));
-				}
-				else if (map.getTileProperty(tileId, "shape")
-						.equals("downhill")) {
+				} else if (map.getTileProperty(tileId, "shape").equals(
+						"downhill")) {
 					shape.add(new Vector2(i, j));
 					shape.add(new Vector2((i + 1), j + 1));
 					collisionShapes.add(shape.toArray(Vector2.class));

@@ -96,7 +96,7 @@ public class DemoScreen implements Screen {
 			FixtureDef fixtureDef = new FixtureDef();
 			fixtureDef.shape = groundPoly;
 			fixtureDef.filter.groupIndex = 0;
-			fixtureDef.friction = 0.5f;
+			fixtureDef.friction = 1f;
 			groundBody.createFixture(fixtureDef);
 			groundPoly.dispose();
 
