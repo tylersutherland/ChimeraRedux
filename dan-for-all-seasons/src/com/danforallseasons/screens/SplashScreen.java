@@ -17,7 +17,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.danforallseasons.DanForAllSeasons;
 import com.danforallseasons.tweenaccessors.SpriteAccessor;
 
-
 public class SplashScreen implements Screen {
 
 	private Texture texture;
@@ -30,23 +29,22 @@ public class SplashScreen implements Screen {
 		this.dan = d;
 	}
 
-	
-	
 	@Override
 	public void render(float delta) {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
-		
+
 		manager.update(delta);
 
 		spriteBatch.begin();
-		sprite.setPosition(Gdx.graphics.getWidth() / 2 - sprite.getWidth() / 2, Gdx.graphics.getHeight() / 2);
+		sprite.setPosition(Gdx.graphics.getWidth() / 2 - sprite.getWidth() / 2,
+				Gdx.graphics.getHeight() / 2);
 		sprite.draw(spriteBatch);
 		spriteBatch.end();
-		
+
 		if ((Gdx.input.isKeyPressed(Keys.SPACE)) || (Gdx.input.isTouched())) {
 			Gdx.app.log(DanForAllSeasons.LOG, "Setting Screen to Menu");
-            dan.setScreen(new MenuScreen(dan));
+			dan.setScreen(new MenuScreen(dan));
 		}
 	}
 
@@ -58,40 +56,37 @@ public class SplashScreen implements Screen {
 	@Override
 	public void show() {
 		texture = new Texture("YellowFlower.png");
-		texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
-		
+		texture.setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
+
 		sprite = new Sprite(texture);
-		sprite.setColor(1,1,1,0);
+		sprite.setColor(1, 1, 1, 0);
 		sprite.scale(2f);
-		
+
 		spriteBatch = new SpriteBatch();
-		
+
 		Tween.registerAccessor(Sprite.class, new SpriteAccessor());
-		
+
 		manager = new TweenManager();
-		
-		TweenCallback callback = new TweenCallback(){
+
+		TweenCallback callback = new TweenCallback() {
 			@Override
 			public void onEvent(int type, BaseTween<?> source) {
 				tweenCompleted();
 			}
 		};
-		
-		Tween.to(sprite, SpriteAccessor.ALPHA, 1.25f)
-			.target(1)
-			.ease(TweenEquations.easeInQuad)
-			.repeatYoyo(1, 1.75f)
-			.setCallback(callback)
-			.setCallbackTriggers(TweenCallback.COMPLETE)
-			.start(manager);
-		
+
+		Tween.to(sprite, SpriteAccessor.ALPHA, 1.25f).target(1)
+				.ease(TweenEquations.easeInQuad).repeatYoyo(1, 1.75f)
+				.setCallback(callback)
+				.setCallbackTriggers(TweenCallback.COMPLETE).start(manager);
+
 	}
 
-	private void tweenCompleted(){
+	private void tweenCompleted() {
 		Gdx.app.log(DanForAllSeasons.LOG, "Setting Screen to Menu");
-        dan.setScreen(new MenuScreen(dan));
+		dan.setScreen(new MenuScreen(dan));
 	}
-	
+
 	@Override
 	public void hide() {
 		dispose();
@@ -99,12 +94,12 @@ public class SplashScreen implements Screen {
 
 	@Override
 	public void pause() {
-		
+
 	}
 
 	@Override
 	public void resume() {
-		
+
 	}
 
 	@Override

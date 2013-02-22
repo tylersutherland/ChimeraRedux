@@ -1,8 +1,10 @@
 package com.danforallseasons.tiled;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.tiled.TiledMap;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Disposable;
 
@@ -28,12 +30,27 @@ public class TiledMapRenderer implements Disposable {
 
 	private int currentLayer;
 
+	private boolean changeLayer;
+
+	private int oldLayer;
+
+	private ShaderProgram fadeOutShader;
+	private ShaderProgram defaultShader;
+
 	public TiledMapRenderer(TiledMap map, TiledMapAtlas atlas) {
 		this.map = map;
 		this.atlas = atlas;
 		this.tileWidth = map.tileWidth;
 		this.tileHeight = map.tileHeight;
 		batch = new SpriteBatch();
+
+		ShaderProgram.pedantic = false;
+
+		defaultShader = SpriteBatch.createDefaultShader();
+		fadeOutShader = new ShaderProgram(
+				Gdx.files.internal("shaders/fadeOutShader.vs"),
+				Gdx.files.internal("shaders/fadeOutShader.fs"));
+
 	}
 
 	public void render(OrthographicCamera cam) {
@@ -73,9 +90,20 @@ public class TiledMapRenderer implements Disposable {
 					if (tileId == 0)
 						continue;
 
+					batch.setShader(defaultShader);
+
 					batch.draw(atlas.getRegion(tileId), j, i, 0, 0, tileWidth,
 							tileHeight, 1f / PIXELS_PER_METER,
 							1f / PIXELS_PER_METER, 0);
+
+					if (changeLayer) {
+						batch.setShader(fadeOutShader);
+						int oldTileId = map.layers.get(oldLayer).tiles[i][j];
+						batch.draw(atlas.getRegion(oldTileId), j, i, 0, 0,
+								tileWidth, tileHeight, 1f / PIXELS_PER_METER,
+								1f / PIXELS_PER_METER, 0);
+
+					}
 				}
 
 		}
@@ -104,6 +132,8 @@ public class TiledMapRenderer implements Disposable {
 	}
 
 	public void changeLayer() {
+		changeLayer = true;
+		oldLayer = currentLayer;
 		currentLayer++;
 		currentLayer %= map.layers.size();
 
