@@ -1,14 +1,12 @@
 package com.danforallseasons.tiled;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.tiled.TiledMap;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Disposable;
-import com.badlogic.gdx.utils.Timer;
 
 public class TiledMapRenderer implements Disposable {
 
@@ -38,9 +36,8 @@ public class TiledMapRenderer implements Disposable {
 
 	private float elapsedTime;
 
-	// there isn't actually a fade in but there might be in the future
-	private ShaderProgram fadeInShader;
 	private ShaderProgram fadeOutShader;
+
 	private ShaderProgram defaultShader;
 
 	public TiledMapRenderer(TiledMap map, TiledMapAtlas atlas) {
@@ -54,11 +51,8 @@ public class TiledMapRenderer implements Disposable {
 
 		defaultShader = SpriteBatch.createDefaultShader();
 		fadeOutShader = new ShaderProgram(
-				Gdx.files.internal("shaders/fadeOutShader.vert"),
-				Gdx.files.internal("shaders/fadeOutShader.frag"));
-		fadeInShader = new ShaderProgram(
-				Gdx.files.internal("shaders/fadeInShader.vert"),
-				Gdx.files.internal("shaders/fadeInShader.frag"));
+				Gdx.files.internal("shaders/fadeOut.vert"),
+				Gdx.files.internal("shaders/fadeOut.frag"));
 
 	}
 
@@ -151,7 +145,6 @@ public class TiledMapRenderer implements Disposable {
 		oldLayer = currentLayer;
 		currentLayer++;
 		currentLayer %= map.layers.size();
-
 	}
 
 }
