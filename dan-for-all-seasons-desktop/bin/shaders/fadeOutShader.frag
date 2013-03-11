@@ -5,8 +5,9 @@
 varying vec4 v_color;
 varying vec2 v_texCoords;
 uniform sampler2D u_texture;
+uniform float alpha_mod;
 
 void main() {
     gl_FragColor = texture2D(u_texture, v_texCoords);
-    gl_FragColor.a *= 0.5;
+    gl_FragColor.a *= 1 - (alpha_mod / 30);
 }

@@ -9,5 +9,5 @@ uniform float alpha_mod;
 
 void main() {
     gl_FragColor = texture2D(u_texture, v_texCoords);
-    gl_FragColor.a *= 1 - (alpha_mod / 30);
+    //gl_FragColor.a += alpha_mod / 30;
 }

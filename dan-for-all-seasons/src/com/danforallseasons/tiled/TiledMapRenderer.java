@@ -38,23 +38,8 @@ public class TiledMapRenderer implements Disposable {
 
 	private float elapsedTime;
 
-	String vertexShader = "attribute vec4 a_position;    \n"
-			+ "attribute vec4 a_color;\n" + "attribute vec2 a_texCoord0;\n"
-			+ "uniform mat4 u_worldView;\n" + "varying vec4 v_color;"
-			+ "varying vec2 v_texCoords;" + "void main()                  \n"
-			+ "{                            \n"
-			+ "   v_color = vec4(1, 1, 1, 1); \n"
-			+ "   v_texCoords = a_texCoord0; \n"
-			+ "   gl_Position =  u_worldView * a_position;  \n"
-			+ "}                            \n";
-	String fragmentShader = "#ifdef GL_ES\n" + "precision mediump float;\n"
-			+ "#endif\n" + "varying vec4 v_color;\n"
-			+ "varying vec2 v_texCoords;\n" + "uniform sampler2D u_texture;\n"
-			+ "void main()                                  \n"
-			+ "{                                            \n"
-			+ "  gl_FragColor = v_color * texture2D(u_texture, v_texCoords);\n"
-			+ "}";
-
+	// there isn't actually a fade in but there might be in the future
+	private ShaderProgram fadeInShader;
 	private ShaderProgram fadeOutShader;
 	private ShaderProgram defaultShader;
 
@@ -71,6 +56,9 @@ public class TiledMapRenderer implements Disposable {
 		fadeOutShader = new ShaderProgram(
 				Gdx.files.internal("shaders/fadeOutShader.vert"),
 				Gdx.files.internal("shaders/fadeOutShader.frag"));
+		fadeInShader = new ShaderProgram(
+				Gdx.files.internal("shaders/fadeInShader.vert"),
+				Gdx.files.internal("shaders/fadeInShader.frag"));
 
 	}
 
@@ -108,8 +96,7 @@ public class TiledMapRenderer implements Disposable {
 			for (int i = initialRow; i < lastRow; i++)
 				for (int j = initialCol; j < lastCol; j++) {
 					int tileId = map.layers.get(currentLayer).tiles[i][j];
-					if (tileId == 0)
-						continue;
+					if (tileId == 0) continue;
 
 					batch.setShader(defaultShader);
 
@@ -119,13 +106,17 @@ public class TiledMapRenderer implements Disposable {
 
 					if (changeLayer) {
 						batch.setShader(fadeOutShader);
+						fadeOutShader.setUniform1fv("alpha_mod",
+								new float[] { elapsedTime }, 0, 1);
+
 						int oldTileId = map.layers.get(oldLayer).tiles[i][j];
+
 						batch.draw(atlas.getRegion(oldTileId), j, i, 0, 0,
 								tileWidth, tileHeight, 1f / PIXELS_PER_METER,
 								1f / PIXELS_PER_METER, 0);
+
 						elapsedTime += Gdx.graphics.getDeltaTime();
-						if (elapsedTime > 30)
-							changeLayer = false;
+						if (elapsedTime > 30) changeLayer = false;
 					}
 				}
 
