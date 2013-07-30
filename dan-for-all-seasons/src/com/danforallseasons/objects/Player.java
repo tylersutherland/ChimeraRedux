@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.danforallseasons.screens.DemoScreen;
 
 public class Player {
+	private static final int FLOOR = 60;
 	private Vector2 position;
 	private Vector2 speed;
 	private PhysicsState pState;
@@ -38,9 +39,9 @@ public class Player {
 			speed.y = 0;
 		}
 		// TODO: get rid of this hardcoded limit
-		if (position.y < 39 && pState == PhysicsState.FALLING) {
+		if (position.y < FLOOR && pState == PhysicsState.FALLING) {
 			pState = PhysicsState.STANDING;
-			position.y = 39;
+			position.y = FLOOR;
 		}
 
 		// simulates friction
