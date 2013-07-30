@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/dan-for-all-seasons"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="gen"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
-	<classpathentry kind="lib" path="C:/Users/Tyler/workspace/ChimeraRedux/dan-for-all-seasons/libs/gdx.jar" sourcepath="/dan-for-all-seasons/libs/gdx-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="C:/Users/Tyler/workspace/ChimeraRedux/dan-for-all-seasons/libs/gdx.jar" sourcepath="/dan-for-all-seasons/libs/gdx-sources.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/gdx-backend-android.jar" sourcepath="libs/gdx-backend-android-sources.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Tyler/workspace/ChimeraRedux/dan-for-all-seasons/libs/tween-engine-api.jar" sourcepath="/dan-for-all-seasons/libs/tween-engine-api-sources.jar"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/dan-for-all-seasons"/>
+	<classpathentry exported="true" kind="lib" path="C:/Users/Tyler/workspace/ChimeraRedux/dan-for-all-seasons/libs/tween-engine-api.jar" sourcepath="/dan-for-all-seasons/libs/tween-engine-api-sources.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>
