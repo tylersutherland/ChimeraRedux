@@ -31,23 +31,25 @@ public class Player {
 	}
 
 	public void updatePosition() {
+		
+
 		if (pState == PhysicsState.FALLING || pState == PhysicsState.JUMPING) {
 			// This is basically gravity
-			speed.add(0, -DemoScreen.unitScale / 2);
+			speed.add(0, -DemoScreen.unitScale);
 			if (speed.y < 0) pState = PhysicsState.FALLING;
 		} else if (pState == PhysicsState.STANDING) {
 			speed.y = 0;
+			speed.x /= 1.15f;
 		}
+
 		// TODO: get rid of this hardcoded limit
 		if (position.y < FLOOR && pState == PhysicsState.FALLING) {
 			pState = PhysicsState.STANDING;
 			position.y = FLOOR;
 		}
-
-		// simulates friction
-		speed.x /= 1.15f;
-
+		
 		position.add(speed);
+
 	}
 
 	public void draw(SpriteBatch batch) {
@@ -57,13 +59,29 @@ public class Player {
 	}
 
 	public void jump() {
-		if (pState == PhysicsState.STANDING || pState == PhysicsState.WALKING) {
-			speed.y = DemoScreen.unitScale * 10;
+		if (onGround()) {
+			speed.y = DemoScreen.unitScale * 15;
+			speed.x /= 1.15f;
 			pState = PhysicsState.JUMPING;
 		}
 	}
 
 	public void addSpeed(float sX, float sY) {
 		speed.add(sX * DemoScreen.unitScale, sY * DemoScreen.unitScale);
+	}
+
+	public void walk() {
+		if (onGround()) {
+			pState = PhysicsState.WALKING;
+		}
+	}
+
+	public void stop() {
+		if (onGround()) pState = PhysicsState.STANDING;
+	}
+
+	public boolean onGround() {
+		return pState == PhysicsState.STANDING
+				|| pState == PhysicsState.WALKING;
 	}
 }

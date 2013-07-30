@@ -9,10 +9,12 @@ import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.danforallseasons.DanForAllSeasons;
+import com.danforallseasons.control.PlayerController;
 import com.danforallseasons.objects.Player;
 
 public class DemoScreen implements Screen {
@@ -38,12 +40,19 @@ public class DemoScreen implements Screen {
 	private boolean gamePaused;
 	private Player player;
 
+	// Control
+	private GestureDetector gDetector;
+
 	public DemoScreen(DanForAllSeasons dan) {
 		game = dan;
 
 		gamePaused = false;
 
 		player = new Player();
+
+		gDetector = new GestureDetector(new PlayerController(player));
+
+		Gdx.input.setInputProcessor(gDetector);
 
 		initializeFont();
 
@@ -191,6 +200,7 @@ public class DemoScreen implements Screen {
 			player.addSpeed(-1, 0);
 		}
 
+		if (!input.isTouched()) player.stop();
 	}
 
 	private void pauseGame() {
