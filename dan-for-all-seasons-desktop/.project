@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>dan-for-all-seasons-desktop</name>
+	<name>dan-for-all-seasons-newlibgdx-desktop</name>
 	<comment></comment>
 	<projects>
 	</projects>
@@ -18,7 +18,7 @@
 		<link>
 			<name>assets</name>
 			<type>2</type>
-			<locationURI>PARENT-1-PROJECT_LOC/dan-for-all-seasons-android/assets</locationURI>
+			<location>C:/Users/Tyler/workspace/ChimeraRedux/dan-for-all-seasons-android/assets</location>
 		</link>
 	</linkedResources>
 </projectDescription>
