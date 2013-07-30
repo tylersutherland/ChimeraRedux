@@ -7,50 +7,69 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.danforallseasons.DanForAllSeasons;
+import com.danforallseasons.objects.Player;
 
 public class DemoScreen implements Screen {
-
+	/** Pause screen message **/
 	private static final String PAUSE_MSG = "Game Paused\r\nPress R to Resume";
 
+	// Rendering
 	private int width = Gdx.graphics.getWidth();
 	private int height = Gdx.graphics.getHeight();
-	private float unitScale = 1 / 32f;
-	/* Rendering */
-	private SpriteBatch spriteBatch;
+	public static float unitScale = 1 / 32f;
+
+	// Map
 	private TiledMap tMap;
 	private OrthogonalTiledMapRenderer tMapRenderer;
 
+	// Font
 	private SpriteBatch fontSpriteBatch;
 	private BitmapFont font;
 	private OrthographicCamera cam;
 
-	private boolean gamePaused;
-
+	// Game
 	private DanForAllSeasons game;
+	private boolean gamePaused;
+	private Player player;
 
 	public DemoScreen(DanForAllSeasons dan) {
 		game = dan;
-		spriteBatch = new SpriteBatch();
-		fontSpriteBatch = new SpriteBatch();
-		font = new BitmapFont();
-		font.setColor(Color.MAGENTA);
+
+		gamePaused = false;
+
+		player = new Player();
+
+		initializeFont();
+
+		initializeCamera();
+
+		initializeMap();
+
+	}
+
+	private void initializeMap() {
+		tMap = new TmxMapLoader().load("map/demo.tmx");
+		tMapRenderer = new OrthogonalTiledMapRenderer(tMap, unitScale);
+	}
+
+	private void initializeCamera() {
 		cam = new OrthographicCamera();
 		cam.setToOrtho(false, width * unitScale, height * unitScale);
 		cam.position.set(12.5f, 45, 1);
 		cam.update();
+	}
 
-		tMap = new TmxMapLoader().load("map/demo.tmx");
-		tMapRenderer = new OrthogonalTiledMapRenderer(tMap, unitScale);
-		gamePaused = false;
+	private void initializeFont() {
+		fontSpriteBatch = new SpriteBatch();
+		font = new BitmapFont();
+		font.setColor(Color.MAGENTA);
 	}
 
 	@Override
@@ -63,15 +82,26 @@ public class DemoScreen implements Screen {
 		} else {
 			renderGame(delta);
 		}
+		update(delta);
 	}
 
 	private void renderGame(float delta) {
 
 		renderMap();
 
+		renderEntities();
+
 		renderDebugHUD();
 
-		update(delta);
+	}
+
+	private void renderEntities() {
+		SpriteBatch batch = tMapRenderer.getSpriteBatch();
+		batch.begin();
+		{
+			player.draw(batch);
+		}
+		batch.end();
 	}
 
 	private void renderMap() {
@@ -116,19 +146,23 @@ public class DemoScreen implements Screen {
 				Gdx.graphics.getHeight() / 2 + font.getBounds(PAUSE_MSG).height
 						/ 2);
 		fontSpriteBatch.end();
-
-		if (Gdx.input.isKeyPressed(Keys.R)) {
-			Gdx.app.log(DanForAllSeasons.LOG, "Resuming Game");
-			resumeGame();
-		}
 	}
 
 	private void update(float delta) {
 		Input input = Gdx.input;
 
+		pollInput(input);
+		player.updatePosition();
+		cam.position.set(player.getX(), player.getY(), 1);
+		cam.update();
+	}
+
+	private void pollInput(Input input) {
 		if (input.isKeyPressed(Keys.P)) {
-			Gdx.app.log(DanForAllSeasons.LOG, "Pausing Game");
-			pauseGame();
+			if (!gamePaused) {
+				Gdx.app.log(DanForAllSeasons.LOG, "Pausing Game");
+				pauseGame();
+			}
 		}
 		if (input.isKeyPressed(Keys.ESCAPE)) {
 			Gdx.app.log(DanForAllSeasons.LOG, "Quitting Game");
@@ -136,17 +170,28 @@ public class DemoScreen implements Screen {
 		}
 
 		if (input.isKeyPressed(Keys.R)) {
-			Gdx.app.log(DanForAllSeasons.LOG, "Restting Demo");
-			game.setScreen(new DemoScreen(game));
+
+			if (!gamePaused) {
+				Gdx.app.log(DanForAllSeasons.LOG, "Restting Demo");
+				game.setScreen(new DemoScreen(game));
+			} else {
+				Gdx.app.log(DanForAllSeasons.LOG, "Resuming Game");
+				resumeGame();
+			}
+		}
+		if (input.isKeyPressed(Keys.W) || input.isKeyPressed(Keys.UP)) {
+			player.jump();
+		}
+		if (input.isKeyPressed(Keys.S) || input.isKeyPressed(Keys.DOWN)) {
+
+		}
+		if (input.isKeyPressed(Keys.D) || input.isKeyPressed(Keys.RIGHT)) {
+			player.addSpeed(1, 0);
+		}
+		if (input.isKeyPressed(Keys.A) || input.isKeyPressed(Keys.LEFT)) {
+			player.addSpeed(-1, 0);
 		}
 
-		if (input.isKeyPressed(Keys.UP)) cam.translate(new Vector2(0, 1));
-		if (input.isKeyPressed(Keys.DOWN)) cam.translate(new Vector2(0, -1));
-		if (input.isKeyPressed(Keys.LEFT)) cam.translate(new Vector2(1, 0));
-		if (input.isKeyPressed(Keys.RIGHT)) cam.translate(new Vector2(-1, 0));
-		if (input.isKeyPressed(Keys.Q)) cam.zoom += 0.1f;
-		if (input.isKeyPressed(Keys.E)) cam.zoom -= 0.1f;
-		cam.update();
 	}
 
 	private void pauseGame() {
