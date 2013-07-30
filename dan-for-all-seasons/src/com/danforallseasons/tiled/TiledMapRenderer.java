@@ -91,7 +91,7 @@ public class TiledMapRenderer implements Disposable {
 				for (int j = initialCol; j < lastCol; j++) {
 					int tileId = map.layers.get(currentLayer).tiles[i][j];
 					if (tileId == 0) continue;
-
+					
 					batch.setShader(defaultShader);
 
 					batch.draw(atlas.getRegion(tileId), j, i, 0, 0, tileWidth,
@@ -140,11 +140,13 @@ public class TiledMapRenderer implements Disposable {
 	}
 
 	public void changeLayer() {
-		changeLayer = true;
-		elapsedTime = 0;
-		oldLayer = currentLayer;
-		currentLayer++;
-		currentLayer %= map.layers.size();
+		if (!changeLayer) {
+			changeLayer = true;
+			elapsedTime = 0;
+			oldLayer = currentLayer;
+			currentLayer++;
+			currentLayer %= map.layers.size();
+		}
 	}
 
 }
