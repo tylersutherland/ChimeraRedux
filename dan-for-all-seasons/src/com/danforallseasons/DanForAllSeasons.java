@@ -4,14 +4,15 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.danforallseasons.screens.SplashScreen;
 
+public class DanForAllSeasons extends Game {
 
-public class DanForAllSeasons extends Game{
-	
 	/**
-	 * A handy constant that will allow for multi-platform logging via Gdx.app.log
+	 * A handy constant that will allow for multi-platform logging via
+	 * Gdx.app.log
 	 */
 	public static final String LOG = "A Dan for all Seasons";
-	
+	public static final String TAKEMEOUT = "TEMP LOG";
+
 	@Override
 	public void create() {
 		Gdx.app.log(DanForAllSeasons.LOG, "Setting Screen to Splash Screen");
@@ -42,4 +43,5 @@ public class DanForAllSeasons extends Game{
 	public void resume() {
 		super.resume();
 	}
+
 }
