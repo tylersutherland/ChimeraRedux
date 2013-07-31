@@ -8,7 +8,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.danforallseasons.screens.DemoScreen;
 
 public class Player {
-	private static final int FLOOR = 60;
+	private static final int FLOOR = 30;
 	private Vector2 position;
 	private Vector2 speed;
 	private PhysicsState pState;
@@ -31,11 +31,11 @@ public class Player {
 	}
 
 	public void updatePosition() {
-		
 
 		if (pState == PhysicsState.FALLING || pState == PhysicsState.JUMPING) {
 			// This is basically gravity
 			speed.add(0, -DemoScreen.unitScale);
+			speed.x /= 1.05f;
 			if (speed.y < 0) pState = PhysicsState.FALLING;
 		} else if (pState == PhysicsState.STANDING) {
 			speed.y = 0;
@@ -47,7 +47,7 @@ public class Player {
 			pState = PhysicsState.STANDING;
 			position.y = FLOOR;
 		}
-		
+
 		position.add(speed);
 
 	}
@@ -61,7 +61,7 @@ public class Player {
 	public void jump() {
 		if (onGround()) {
 			speed.y = DemoScreen.unitScale * 15;
-			speed.x /= 1.15f;
+			
 			pState = PhysicsState.JUMPING;
 		}
 	}

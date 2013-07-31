@@ -19,7 +19,7 @@ import com.danforallseasons.objects.Player;
 
 public class DemoScreen implements Screen {
 	/** Pause screen message **/
-	private static final String PAUSE_MSG = "Game Paused\r\nPress R to Resume";
+	private static final String PAUSE_MSG = "Game Paused\r\nPress O to Resume";
 
 	// Rendering
 	private int width = Gdx.graphics.getWidth();
@@ -29,6 +29,7 @@ public class DemoScreen implements Screen {
 	// Map
 	private TiledMap tMap;
 	private OrthogonalTiledMapRenderer tMapRenderer;
+	private int[] BG_LAYERS = { 0, 1 }, FG_LAYERS = { 2 };
 
 	// Font
 	private SpriteBatch fontSpriteBatch;
@@ -95,9 +96,11 @@ public class DemoScreen implements Screen {
 
 	private void renderGame(float delta) {
 
-		renderMap();
+		renderMapBackground();
 
 		renderEntities();
+
+		renderMapForeground();
 
 		renderDebugHUD();
 
@@ -112,9 +115,14 @@ public class DemoScreen implements Screen {
 		batch.end();
 	}
 
-	private void renderMap() {
+	private void renderMapBackground() {
 		tMapRenderer.setView(cam);
-		tMapRenderer.render();
+		tMapRenderer.render(BG_LAYERS);
+	}
+
+	private void renderMapForeground() {
+		tMapRenderer.setView(cam);
+		tMapRenderer.render(FG_LAYERS);
 	}
 
 	private void renderDebugHUD() {
@@ -172,6 +180,12 @@ public class DemoScreen implements Screen {
 				pauseGame();
 			}
 		}
+		if (input.isKeyPressed(Keys.O)) {
+			if (gamePaused) {
+				Gdx.app.log(DanForAllSeasons.LOG, "Resuming Game");
+				resumeGame();
+			}
+		}
 		if (input.isKeyPressed(Keys.ESCAPE)) {
 			Gdx.app.log(DanForAllSeasons.LOG, "Quitting Game");
 			Gdx.app.exit();
@@ -182,16 +196,14 @@ public class DemoScreen implements Screen {
 			if (!gamePaused) {
 				Gdx.app.log(DanForAllSeasons.LOG, "Restting Demo");
 				game.setScreen(new DemoScreen(game));
-			} else {
-				Gdx.app.log(DanForAllSeasons.LOG, "Resuming Game");
-				resumeGame();
 			}
 		}
 		if (input.isKeyPressed(Keys.W) || input.isKeyPressed(Keys.UP)) {
 			player.jump();
+			// player.addSpeed(0, 1);
 		}
 		if (input.isKeyPressed(Keys.S) || input.isKeyPressed(Keys.DOWN)) {
-
+			// player.addSpeed(0, -1);
 		}
 		if (input.isKeyPressed(Keys.D) || input.isKeyPressed(Keys.RIGHT)) {
 			player.addSpeed(1, 0);
