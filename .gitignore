@@ -1,2 +1,3 @@
 *.class
-*/proguard.cfg
+Thumbs.db
+thumbs.db
