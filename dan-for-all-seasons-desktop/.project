@@ -18,7 +18,13 @@
 		<link>
 			<name>assets</name>
 			<type>2</type>
-			<location>C:/Users/Tyler/workspace/ChimeraRedux/dan-for-all-seasons-android/assets</location>
+			<locationURI>DAN_ANDROID/assets</locationURI>
 		</link>
 	</linkedResources>
+	<variableList>
+		<variable>
+			<name>DAN_ANDROID</name>
+			<value>file:/C:/Users/Tyler/workspace/ChimeraRedux/dan-for-all-seasons-android</value>
+		</variable>
+	</variableList>
 </projectDescription>
