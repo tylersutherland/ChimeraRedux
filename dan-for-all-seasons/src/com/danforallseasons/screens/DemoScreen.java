@@ -168,7 +168,7 @@ public class DemoScreen implements Screen {
 		Input input = Gdx.input;
 
 		pollInput(input);
-		player.updatePosition();
+		player.update(delta);
 		cam.position.set(player.getX(), player.getY(), 1);
 		cam.update();
 	}
@@ -199,17 +199,21 @@ public class DemoScreen implements Screen {
 			}
 		}
 		if (input.isKeyPressed(Keys.W) || input.isKeyPressed(Keys.UP)) {
-			player.jump();
-			// player.addSpeed(0, 1);
+			if (player.onGround()) player.jump();
 		}
 		if (input.isKeyPressed(Keys.S) || input.isKeyPressed(Keys.DOWN)) {
-			// player.addSpeed(0, -1);
 		}
 		if (input.isKeyPressed(Keys.D) || input.isKeyPressed(Keys.RIGHT)) {
-			player.addSpeed(1, 0);
+			if (player.onGround()) {
+				player.addSpeed(1, 0);
+				player.walk();
+			}
 		}
 		if (input.isKeyPressed(Keys.A) || input.isKeyPressed(Keys.LEFT)) {
-			player.addSpeed(-1, 0);
+			if (player.onGround()) {
+				player.addSpeed(-1, 0);
+				player.walk();
+			}
 		}
 
 		if (!input.isTouched()) player.stop();

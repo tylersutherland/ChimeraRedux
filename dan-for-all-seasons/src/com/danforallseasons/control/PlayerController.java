@@ -20,15 +20,15 @@ public class PlayerController implements GestureListener {
 		if (player.onGround()) {
 			player.walk();
 			if (x > 2 * Gdx.graphics.getWidth() / 3) {
-				player.addSpeed(5, 0);
+				player.addSpeed(2, 0);
 			} else if (x < 1 * Gdx.graphics.getWidth() / 3) {
-				player.addSpeed(-5, 0);
+				player.addSpeed(-2, 0);
 			}
 		} else {
 			if (x > Gdx.graphics.getWidth() / 2) {
-				player.addSpeed(4, 0);
+				player.addSpeed(2.5f, 0);
 			} else {
-				player.addSpeed(-4, 0);
+				player.addSpeed(-2.5f, 0);
 			}
 		}
 		return false;
