@@ -96,17 +96,19 @@ public class DemoScreen implements Screen {
 		bodyDef.type = BodyType.DynamicBody;
 		bodyDef.position.set(20,30);
 		body = world.createBody(bodyDef);
-		//body.setUserData(player);
+		body.setUserData(player);
 		groundBodyDef = new BodyDef();  	
-		groundBodyDef.position.set(new Vector2(0, 20));  
+		groundBodyDef.position.set(new Vector2(0, 30));  
 		groundBody = world.createBody(groundBodyDef);  
 		
 		groundBox = new PolygonShape();  
-		groundBox.setAsBox(cam.viewportWidth, 10.0f);
+		groundBox.setAsBox(cam.viewportWidth, 5.0f);
 		groundBody.createFixture(groundBox, 0.0f); 	
 		circle = new CircleShape();
-		circle.setRadius(6f);
+		circle.setRadius(3f);
 		Vector2 pos = new Vector2(0,30);
+		player.setX(-80);
+		player.setY(30);
 		circle.setPosition(pos);
 		fixtureDef = new FixtureDef();
 		fixtureDef.shape = circle;
@@ -188,6 +190,8 @@ public class DemoScreen implements Screen {
 			font.draw(fontSpriteBatch, "Y Location: " + cam.position.y, 20, 80);
 			font.draw(fontSpriteBatch, "Zoom: " + cam.zoom, 20, 60);
 			font.draw(fontSpriteBatch, "Layer: " + tMap.getTileSets().getTileSet(0).getName(), 20, 120);
+			font.draw(fontSpriteBatch, "Ball X: " + body.getPosition().x, 20, 160);
+			font.draw(fontSpriteBatch, "Ball Y: " + body.getPosition().y, 20, 140);
 			
 			font.draw(
 					fontSpriteBatch,
@@ -228,7 +232,7 @@ public class DemoScreen implements Screen {
 		cam.position.set(player.getX(), player.getY(), 1);
 		cam.update();
 		
-		/*Array<Body> bodies = new Array<Body>();
+		Array<Body> bodies = new Array<Body>();
 
 	    world.getBodies(bodies);
 		Iterator<Body> bi = bodies.iterator();//world.getBodies(bodies);
@@ -241,7 +245,7 @@ public class DemoScreen implements Screen {
 			}
 		
 		}	
-		*/
+		
 		world.step(1/60f, 6, 2);
 		debugRenderer.render(world, cam.combined);
 	}

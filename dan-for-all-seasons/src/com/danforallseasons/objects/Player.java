@@ -39,7 +39,8 @@ public class Player {
 	public Player() {
 		position = new Vector2(12.5f, 30);
 		speed = new Vector2(0, 0);
-		pState = PhysicsState.FALLING;
+		//pState = PhysicsState.FALLING;
+		pState = PhysicsState.STANDING;
 
 		addAnimations();
 
@@ -93,7 +94,7 @@ public class Player {
 	}
 
 	public void update(float deltaTime) {
-		updatePosition();
+		//updatePosition();
 		updateAnimation(deltaTime);
 	}
 
