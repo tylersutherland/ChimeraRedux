@@ -1,6 +1,9 @@
 package com.danforallseasons.screens;
 
+import java.util.Iterator;
+
 import com.badlogic.gdx.Gdx;
+
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Screen;
@@ -13,6 +16,18 @@ import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.Fixture;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.Array;
 import com.danforallseasons.DanForAllSeasons;
 import com.danforallseasons.control.PlayerController;
 import com.danforallseasons.objects.Player;
@@ -44,6 +59,22 @@ public class DemoScreen implements Screen {
 	// Control
 	private GestureDetector gDetector;
 
+	public World world = new World(new Vector2(0, -10), true); 
+	static final float WORLD_TO_BOX = 0.01f;
+	static final float BOX_TO_WORLD = 100f;
+	
+	Box2DDebugRenderer debugRenderer = new Box2DDebugRenderer();	// Box2D Debug frame renderer
+	BodyDef bodyDef = new BodyDef();
+	Body body; 	
+	CircleShape circle; 
+	
+	FixtureDef fixtureDef;
+	Fixture fixture; 
+	
+	BodyDef groundBodyDef; 
+	Body groundBody; 
+	PolygonShape groundBox; 
+	
 	public DemoScreen(DanForAllSeasons dan) {
 		game = dan;
 
@@ -60,7 +91,30 @@ public class DemoScreen implements Screen {
 		initializeCamera();
 
 		initializeMap();
-
+		
+		bodyDef = new BodyDef();
+		bodyDef.type = BodyType.DynamicBody;
+		bodyDef.position.set(20,30);
+		body = world.createBody(bodyDef);
+		//body.setUserData(player);
+		groundBodyDef = new BodyDef();  	
+		groundBodyDef.position.set(new Vector2(0, 20));  
+		groundBody = world.createBody(groundBodyDef);  
+		
+		groundBox = new PolygonShape();  
+		groundBox.setAsBox(cam.viewportWidth, 10.0f);
+		groundBody.createFixture(groundBox, 0.0f); 	
+		circle = new CircleShape();
+		circle.setRadius(6f);
+		Vector2 pos = new Vector2(0,30);
+		circle.setPosition(pos);
+		fixtureDef = new FixtureDef();
+		fixtureDef.shape = circle;
+		fixtureDef.density = 0.5f;	 
+		fixtureDef.friction = 0.4f;
+		fixtureDef.restitution = 0.6f;
+		fixture = body.createFixture(fixtureDef);
+		
 	}
 
 	private void initializeMap() {
@@ -130,9 +184,11 @@ public class DemoScreen implements Screen {
 		{
 			font.draw(fontSpriteBatch,
 					"FPS: " + Gdx.graphics.getFramesPerSecond(), 20, 20);
-			font.draw(fontSpriteBatch, "Location: " + cam.position.x + ","
-					+ cam.position.y, 20, 80);
+			font.draw(fontSpriteBatch, "X Location: " + cam.position.x, 20, 100);
+			font.draw(fontSpriteBatch, "Y Location: " + cam.position.y, 20, 80);
 			font.draw(fontSpriteBatch, "Zoom: " + cam.zoom, 20, 60);
+			font.draw(fontSpriteBatch, "Layer: " + tMap.getTileSets().getTileSet(0).getName(), 20, 120);
+			
 			font.draw(
 					fontSpriteBatch,
 					"Press P to Pause",
@@ -171,6 +227,23 @@ public class DemoScreen implements Screen {
 		player.update(delta);
 		cam.position.set(player.getX(), player.getY(), 1);
 		cam.update();
+		
+		/*Array<Body> bodies = new Array<Body>();
+
+	    world.getBodies(bodies);
+		Iterator<Body> bi = bodies.iterator();//world.getBodies(bodies);
+		Body bod;
+		while (bi.hasNext()) {
+			bod = bi.next();
+			if (bod.getUserData() == player) {
+				player.setX(bod.getPosition().x);
+				player.setY(bod.getPosition().y);
+			}
+		
+		}	
+		*/
+		world.step(1/60f, 6, 2);
+		debugRenderer.render(world, cam.combined);
 	}
 
 	private void pollInput(Input input) {
@@ -204,14 +277,14 @@ public class DemoScreen implements Screen {
 		if (input.isKeyPressed(Keys.S) || input.isKeyPressed(Keys.DOWN)) {
 		}
 		if (input.isKeyPressed(Keys.D) || input.isKeyPressed(Keys.RIGHT)) {
+			player.addSpeed(1, 0);
 			if (player.onGround()) {
-				player.addSpeed(1, 0);
 				player.walk();
 			}
 		}
 		if (input.isKeyPressed(Keys.A) || input.isKeyPressed(Keys.LEFT)) {
+			player.addSpeed(-1, 0);
 			if (player.onGround()) {
-				player.addSpeed(-1, 0);
 				player.walk();
 			}
 		}

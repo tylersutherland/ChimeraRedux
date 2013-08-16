@@ -37,7 +37,7 @@ public class Player {
 	private float stateTime;
 
 	public Player() {
-		position = new Vector2(12.5f, 60);
+		position = new Vector2(12.5f, 30);
 		speed = new Vector2(0, 0);
 		pState = PhysicsState.FALLING;
 
@@ -73,7 +73,20 @@ public class Player {
 	public float getY() {
 		return position.y;
 	}
+	
+	public void setX(float incomingX) {
+		position.x = incomingX;
+	}
+	
+	public void setY(float incomingY) {
+		position.y = incomingY;
+	}
 
+	public PhysicsState getPState()
+	{
+		return pState;
+	}
+	
 	public void initializeSpriteSheet(FileHandle handle) {
 		spriteSheet = new Texture(handle);
 		sprites = TextureRegion.split(spriteSheet, 64, 128);
