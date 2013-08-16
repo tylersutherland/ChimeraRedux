@@ -49,7 +49,9 @@ local.properties
 .classpath
 .settings/
 .loadpath
-
+proguard/
+*.apk
+*.ap_
 # External tool builders
 .externalToolBuilders/
 
