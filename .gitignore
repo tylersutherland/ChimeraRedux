@@ -38,6 +38,7 @@ Thumbs.db
 *.pydevproject
 .project
 .metadata
+.metadata/**
 bin/**
 tmp/**
 tmp/**/*
