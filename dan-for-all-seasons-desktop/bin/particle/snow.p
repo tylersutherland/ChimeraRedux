@@ -169,4 +169,4 @@ aligned: false
 additive: true
 behind: false
 - Image Path -
-C:\Users\Tyler\workspace\ChimeraRedux\dan-for-all-seasons-android\assets\particle\image\snowflake.png
+image\snowflake.png

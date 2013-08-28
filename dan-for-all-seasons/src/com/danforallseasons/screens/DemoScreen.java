@@ -123,7 +123,7 @@ public class DemoScreen implements Screen {
 		fixture = body.createFixture(fixtureDef);
 
 		pEffect = new ParticleEffect();
-		pEffect.load(Gdx.files.internal("particle/snow.p"),
+		pEffect.load(Gdx.files.internal("particle/snow2.p"),
 				Gdx.files.internal("particle/image"));
 		pEffect.setPosition(20, 50);
 
