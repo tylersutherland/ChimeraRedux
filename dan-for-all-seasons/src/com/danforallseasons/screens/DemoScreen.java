@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -59,22 +60,26 @@ public class DemoScreen implements Screen {
 	// Control
 	private GestureDetector gDetector;
 
-	public World world = new World(new Vector2(0, -10), true); 
+	public World world = new World(new Vector2(0, -10), true);
 	static final float WORLD_TO_BOX = 0.01f;
 	static final float BOX_TO_WORLD = 100f;
-	
-	Box2DDebugRenderer debugRenderer = new Box2DDebugRenderer();	// Box2D Debug frame renderer
+
+	Box2DDebugRenderer debugRenderer = new Box2DDebugRenderer(); // Box2D Debug
+																	// frame
+																	// renderer
 	BodyDef bodyDef = new BodyDef();
-	Body body; 	
-	CircleShape circle; 
-	
+	Body body;
+	CircleShape circle;
+
 	FixtureDef fixtureDef;
-	Fixture fixture; 
-	
-	BodyDef groundBodyDef; 
-	Body groundBody; 
-	PolygonShape groundBox; 
-	
+	Fixture fixture;
+
+	BodyDef groundBodyDef;
+	Body groundBody;
+	PolygonShape groundBox;
+
+	ParticleEffect pEffect;
+
 	public DemoScreen(DanForAllSeasons dan) {
 		game = dan;
 
@@ -91,32 +96,37 @@ public class DemoScreen implements Screen {
 		initializeCamera();
 
 		initializeMap();
-		
+
 		bodyDef = new BodyDef();
 		bodyDef.type = BodyType.DynamicBody;
-		bodyDef.position.set(20,30);
+		bodyDef.position.set(20, 30);
 		body = world.createBody(bodyDef);
 		body.setUserData(player);
-		groundBodyDef = new BodyDef();  	
-		groundBodyDef.position.set(new Vector2(0, 30));  
-		groundBody = world.createBody(groundBodyDef);  
-		
-		groundBox = new PolygonShape();  
+		groundBodyDef = new BodyDef();
+		groundBodyDef.position.set(new Vector2(0, 30));
+		groundBody = world.createBody(groundBodyDef);
+
+		groundBox = new PolygonShape();
 		groundBox.setAsBox(cam.viewportWidth, 5.0f);
-		groundBody.createFixture(groundBox, 0.0f); 	
+		groundBody.createFixture(groundBox, 0.0f);
 		circle = new CircleShape();
 		circle.setRadius(3f);
-		Vector2 pos = new Vector2(0,30);
+		Vector2 pos = new Vector2(0, 30);
 		player.setX(-80);
 		player.setY(30);
 		circle.setPosition(pos);
 		fixtureDef = new FixtureDef();
 		fixtureDef.shape = circle;
-		fixtureDef.density = 0.5f;	 
+		fixtureDef.density = 0.5f;
 		fixtureDef.friction = 0.4f;
 		fixtureDef.restitution = 0.6f;
 		fixture = body.createFixture(fixtureDef);
-		
+
+		pEffect = new ParticleEffect();
+		pEffect.load(Gdx.files.internal("particle/snow.p"),
+				Gdx.files.internal("particle/image"));
+		pEffect.setPosition(20, 50);
+
 	}
 
 	private void initializeMap() {
@@ -128,6 +138,7 @@ public class DemoScreen implements Screen {
 		cam = new OrthographicCamera();
 		cam.setToOrtho(false, width * unitScale, height * unitScale);
 		cam.position.set(12.5f, 45, 1);
+		cam.zoom = 1.5f;
 		cam.update();
 	}
 
@@ -140,7 +151,7 @@ public class DemoScreen implements Screen {
 	@Override
 	public void render(float delta) {
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
-		Gdx.gl.glClearColor(0, 1, 1, 1);
+		Gdx.gl.glClearColor(0, 0, 0, 1);
 
 		if (gamePaused) {
 			renderPauseMenu();
@@ -158,8 +169,20 @@ public class DemoScreen implements Screen {
 
 		renderMapForeground();
 
+		renderParticles();
+
 		renderDebugHUD();
 
+	}
+
+	private void renderParticles() {
+
+		SpriteBatch batch = tMapRenderer.getSpriteBatch();
+		batch.begin();
+		{
+			pEffect.draw(batch);
+		}
+		batch.end();
 	}
 
 	private void renderEntities() {
@@ -167,8 +190,10 @@ public class DemoScreen implements Screen {
 		batch.begin();
 		{
 			player.draw(batch);
+
 		}
 		batch.end();
+
 	}
 
 	private void renderMapBackground() {
@@ -179,6 +204,7 @@ public class DemoScreen implements Screen {
 	private void renderMapForeground() {
 		tMapRenderer.setView(cam);
 		tMapRenderer.render(FG_LAYERS);
+
 	}
 
 	private void renderDebugHUD() {
@@ -189,10 +215,13 @@ public class DemoScreen implements Screen {
 			font.draw(fontSpriteBatch, "X Location: " + cam.position.x, 20, 100);
 			font.draw(fontSpriteBatch, "Y Location: " + cam.position.y, 20, 80);
 			font.draw(fontSpriteBatch, "Zoom: " + cam.zoom, 20, 60);
-			font.draw(fontSpriteBatch, "Layer: " + tMap.getTileSets().getTileSet(0).getName(), 20, 120);
-			font.draw(fontSpriteBatch, "Ball X: " + body.getPosition().x, 20, 160);
-			font.draw(fontSpriteBatch, "Ball Y: " + body.getPosition().y, 20, 140);
-			
+			font.draw(fontSpriteBatch, "Layer: "
+					+ tMap.getTileSets().getTileSet(0).getName(), 20, 120);
+			font.draw(fontSpriteBatch, "Ball X: " + body.getPosition().x, 20,
+					160);
+			font.draw(fontSpriteBatch, "Ball Y: " + body.getPosition().y, 20,
+					140);
+
 			font.draw(
 					fontSpriteBatch,
 					"Press P to Pause",
@@ -231,11 +260,11 @@ public class DemoScreen implements Screen {
 		player.update(delta);
 		cam.position.set(player.getX(), player.getY(), 1);
 		cam.update();
-		
+
 		Array<Body> bodies = new Array<Body>();
 
-	    world.getBodies(bodies);
-		Iterator<Body> bi = bodies.iterator();//world.getBodies(bodies);
+		world.getBodies(bodies);
+		Iterator<Body> bi = bodies.iterator();// world.getBodies(bodies);
 		Body bod;
 		while (bi.hasNext()) {
 			bod = bi.next();
@@ -243,10 +272,10 @@ public class DemoScreen implements Screen {
 				player.setX(bod.getPosition().x);
 				player.setY(bod.getPosition().y);
 			}
-		
-		}	
-		
-		world.step(1/60f, 6, 2);
+
+		}
+		pEffect.update(delta);
+		world.step(1 / 60f, 6, 2);
 		debugRenderer.render(world, cam.combined);
 	}
 
