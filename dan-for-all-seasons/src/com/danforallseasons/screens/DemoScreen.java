@@ -270,7 +270,7 @@ public class DemoScreen implements Screen {
 			bod = bi.next();
 			if (bod.getUserData() == player) {
 				player.setX(bod.getPosition().x);
-				player.setY(bod.getPosition().y);
+				player.setY(bod.getPosition().y+10);
 			}
 
 		}
