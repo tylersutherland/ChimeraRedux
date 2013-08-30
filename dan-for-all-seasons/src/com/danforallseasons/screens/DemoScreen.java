@@ -360,6 +360,6 @@ public class DemoScreen implements Screen {
 
 	@Override
 	public void dispose() {
-
+		
 	}
 }
