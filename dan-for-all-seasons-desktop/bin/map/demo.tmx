@@ -3,12 +3,12 @@
  <tileset firstgid="1" name="spritesheet1" tilewidth="64" tileheight="64">
   <image source="spritesheet1.png" width="256" height="1024"/>
  </tileset>
- <layer name="Back" width="50" height="20" visible="0">
+ <layer name="Back" width="50" height="20">
   <data encoding="base64" compression="zlib">
    eJxjYKAc8AGxABRzUcG8gQIaQCwGxZwMQ9cvyP6gt1+0gVgHiUYXJ8UMdH/Q0y/6QGyARKOLowNeBkQe4EdTi80fIKxCC4ejAWMgNkGi0cWRAcgPPFjcB1M7kP4YBaNgFAx9gK38EBtQF5EHRv0xuMBw8ccooD4YTQejYKgCAPDFCmM=
   </data>
  </layer>
- <layer name="Middle" width="50" height="20" visible="0">
+ <layer name="Middle" width="50" height="20">
   <data encoding="base64" compression="zlib">
    eJztk0sKgDAMBbtU8bfSC7gQFBR07f2PZQoVirSaSLEf8mDIJtAMjwrBoaYCGiC7UQOFx7swkbe3ihLoLORqJ0Qf6fB0e+g+VwdUB5MPxql3bvCtA4qTCfnn6pcdKq4dMAzA6OFd9mAP39gSo8cEzNqM1WMBVm3G6rEBuzZj9MDAHjSORDxS6eMPj1RyAnqQP4U=
   </data>
