@@ -145,13 +145,13 @@ public class DemoScreen implements Screen {
 	private void initializeFont() {
 		fontSpriteBatch = new SpriteBatch();
 		font = new BitmapFont();
-		font.setColor(Color.MAGENTA);
+		font.setColor(Color.ORANGE);
 	}
 
 	@Override
 	public void render(float delta) {
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
-		Gdx.gl.glClearColor(0, 0, 0, 1);
+		Gdx.gl.glClearColor(162 / 255f, 232 / 255f, 202 / 255f, 1);
 
 		if (gamePaused) {
 			renderPauseMenu();
@@ -270,7 +270,7 @@ public class DemoScreen implements Screen {
 			bod = bi.next();
 			if (bod.getUserData() == player) {
 				player.setX(bod.getPosition().x);
-				player.setY(bod.getPosition().y+10);
+				player.setY(bod.getPosition().y + 10);
 			}
 
 		}
